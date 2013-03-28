@@ -3,7 +3,7 @@
 # use make command under current directory
 
 # Variable Definition
-OBJS = MainFunction.o ClientUtility.o HandleUtility.o RTPPacketUtility.o LayoutUtility.o CallbackUtility.o DieWithMessage.o
+OBJS = MainFunction.o ClientUtility.o HandleUtility.o RTPPacketUtility.o LayoutUtility.o CallbackUtility.o 
 CC = gcc
 CFLAGS = -Wall -O -g
 PKGCON = `pkg-config --cflags --libs gtk+-2.0`

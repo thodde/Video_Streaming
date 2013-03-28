@@ -248,7 +248,7 @@ void setImage(const u_int8 *rtp){
 	//Open screenshot file stream
 	screen_channel = fopen(SCREEN_NAME, "w");
 	if (screen_channel == NULL){
-		dieWithSystemMessage("fopen() failed");
+		perror("fopen() failed");
 	}
 	//Write the image buffer in the file
 	fwrite(rtp + RTP_HEAD_SIZE, FRAME_SIZE - RTP_HEAD_SIZE, ONE_SIZE, screen_channel);

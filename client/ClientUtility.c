@@ -56,7 +56,7 @@ int setupClientTCPSocket(const char *host, const char *service){
 	return_value = getaddrinfo(host, service, &address_criteria, &server_address);
 	//Success returns zero
 	if (return_value != 0){
-		dieWithUserMessage("getaddrinfo() failed", gai_strerror(return_value));
+		perror("getaddrinfo() failed");
 	}
 	
 	//Create socket for connecting the server
@@ -107,7 +107,7 @@ int setupClientUDPSocket(const char *service){
 	return_value = getaddrinfo(NULL, service, &address_criteria, &server_address);
 	//Success returns zero
 	if (return_value != 0){
-		dieWithUserMessage("getaddrinfo() failed!", gai_strerror(return_value));
+		perror("getaddrinfo() failed!");
 	}
 	
 	//Create socket for incoming connections
@@ -127,7 +127,7 @@ int setupClientUDPSocket(const char *service){
 			address_size = sizeof(local_address);
 			//Get socket name
 			if (getsockname(client_socket, (struct sockaddr*)&local_address, &address_size) < 0){
-				dieWithSystemMessage("getsockname() failed!");
+				perror("getsockname() failed!");
 			}
 			//Output local address and port of socket(listening address and port)
 			fputs("Binding to ", stdout);

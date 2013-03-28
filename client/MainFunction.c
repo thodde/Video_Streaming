@@ -1,26 +1,13 @@
-///////////////////////////////////////////////
 /*
 	File Name:		MainFunction.c
 	Author:			Trevor Hodde
-	Note:			This MainFunction.c file
-					includes Main Function.
 */
-///////////////////////////////////////////////
 
-///////////////HEADER FILES///////////////
 #include "Client.h"
 
-///////////////FUNCTIONS///////////////
-/*Main Function
-  Variable Definition:
-  -- argc: the number of command arguments
-  -- argv[]: each vairable of command arguments(argv[0] is the path of execution file forever)
-  Return Value: client exit number
-*/
 int main(int argc, char *argv[]){
-	//Test for correct number of arguments
 	if (argc != 4){
-		dieWithUserMessage("Parameter(s)", "<Server IP address/Name> <Server port/service> <Video file name>");
+		perror("Usage: <Server IP address/Hostname> <Server port> <video file name>");
 	}
 
 	CLIENT_DATA		*cdata;			//_client_data structure node

@@ -119,9 +119,6 @@ int			client_rtcp_port;	//client rtcp port number
 int			server_rtp_port;	//server rtp port number
 
 ///////////////FUNCTION DECLARATION///////////////
-/*DieWithMessage.c*/
-void	dieWithUserMessage(const char *message, const char *detail);
-void	dieWithSystemMessage(const char *message);
 /*ClientUtility.c*/
 void	initClient(int port);
 int		setupClientTCPSocket(const char *host, const char *service);
