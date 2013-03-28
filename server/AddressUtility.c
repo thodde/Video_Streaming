@@ -1,7 +1,7 @@
-/*
-	File Name:	AddressUtility.c
-	Author:		Trevor Hodde
-*/
+/**
+ *	File Name:	AddressUtility.c
+ *	Author:		Trevor Hodde
+ */
 
 #include <arpa/inet.h>
 #include "Server.h"
@@ -9,14 +9,13 @@
 void printSocketAddress(const struct sockaddr *address, FILE *stream, bool get_address){
 	void 		*numeric_address;					//pointer to binary address
 	char 		address_buffer[INET6_ADDRSTRLEN];	//address data
-	in_port_t 	port;								//port number
+	in_port_t 	port;
 	
 	//Test for address and stream
 	if (address == NULL || stream == NULL){
 		return;
 	}
 	
-	//Set pointer to address based on address family
 	switch (address->sa_family){
 		case AF_INET:
 			numeric_address = &((struct sockaddr_in*)address)->sin_addr;

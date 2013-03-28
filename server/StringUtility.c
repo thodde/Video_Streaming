@@ -1,24 +1,13 @@
-////////////////////////////////////////////////////////////
 /*
 	File Name:		StringUtility.c
 	Author:			Trevor Hodde
-	Note:			This StringUtility.c file includes 
-					Handle String Functions.
 */
-////////////////////////////////////////////////////////////
 
-///////////////HEADER FILES///////////////
 #include <sys/stat.h>
 #include <ctype.h>
 #include <regex.h>
 #include "Server.h"
 
-///////////////FUNCTIONS///////////////
-/*Convert int type to char* type Function
-  Variable Definition:
-  -- number: original number
-  Return Value: convert string
-*/
 char *itoa(int number){
 	int		i = number;													//number
 	int		j;															//counter
@@ -374,7 +363,7 @@ bool syntaxChecking(char *string, int signal_value){
 	status = regcomp(&reg, pattern, REG_EXTENDED);
 	if (status != 0){
 		regerror(status, &reg, error_buffer, STRING_SIZE);
-		dieWithUserMessage("regcomp() failed!", error_buffer);
+		perror("regcomp() failed!");
 	}
 	//Match the regular expression
 	status = regexec(&reg, string, nmatch, pmatch, 0);

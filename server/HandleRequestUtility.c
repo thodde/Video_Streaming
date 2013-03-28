@@ -1,21 +1,10 @@
-/////////////////////////////////////////////////////////////////
 /*
 	File Name:		HandleRequestUtility.c
 	Author:			Trevor Hodde
-	Note:			This HandleRequestUtility.c file includes 
-					Handle Client Request Functions.
 */
-/////////////////////////////////////////////////////////////////
 
-///////////////HEADER FILES///////////////
 #include "Server.h"
 
-///////////////FUNCTIONS///////////////
-/*Handle Client Request Function
-  Variable Definition:
-  -- client_socket: socket connected to the client
-  Return Value: NULL
-*/
 void handleClientRequest(int client_socket){
 	FILE 	*channel;						//file stream for client socket
 	char 	request_line[STRING_SIZE];		//client request line
@@ -26,7 +15,7 @@ void handleClientRequest(int client_socket){
 	//Create an input stream from the socket
 	channel = fdopen(client_socket, "r");
 	if (channel == NULL){
-		dieWithSystemMessage("fdopen() failed");
+		perror("fdopen() failed");
 	}
 	
 	//Get client Request Line (Jump the blank line)
@@ -77,7 +66,7 @@ void respondClientRequest(char *request, RTSP_HEADER *header, int client_socket)
 	sscanf(request, "%s%s%s", method, url, version);
 	//Decode the URL(if it has %HEX code)
 	decodeURL(url);
-
+/*
 	//Test the method
 	if (methodNotAllow(method)){
 		//405 Method Not Allowed: the method field is neither "SETUP", "PLAY", "PAUSE" nor "TEARDOWN"
@@ -102,7 +91,7 @@ void respondClientRequest(char *request, RTSP_HEADER *header, int client_socket)
 		sendRTSPVersionNotSupported(version, client_socket);
 		return;
 	}
-
+*/
 #ifdef	DEBUG
 	RTSP_HEADER		*debug_header_node;
 
@@ -245,7 +234,7 @@ int	constructResponseMessage(	int				client_socket,
 	//Create an output stream to the socket
 	channel = fdopen(client_socket, "w");
 	if (channel == NULL){
-		dieWithSystemMessage("fopen() failed");
+		perror("fopen() failed");
 	}
 
 	//Response Message Status Line

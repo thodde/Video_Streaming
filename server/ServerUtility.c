@@ -1,22 +1,10 @@
-//////////////////////////////////////////////////////////////////////
 /*
 	File Name:		ServerUtility.c
 	Author:			Trevor Hodde
-	Note:			This ServerUtility.c file includes 
-					Initialize RTSP Server, Setup TCP Socket,
-					Setup UDP Socket, and Connect Socket Function.
 */
-//////////////////////////////////////////////////////////////////////
 
-///////////////HEADER FILES///////////////
 #include "Server.h"
 
-///////////////FUNCTIONS///////////////
-/*Initialize Video Server Function
-  Variable Definition:
-  -- port: server rtp port number
-  Return value: NULL
-*/
 void initServer(int port){
 	//Initialize protocol type
 	memset(protocol_type, 0, NAME_SIZE);
@@ -65,7 +53,7 @@ int setupServerTCPSocket(const char *service){
 	return_value = getaddrinfo(NULL, service, &address_criteria, &server_address);
 	//Success returns zero
 	if (return_value != 0){
-		dieWithUserMessage("getaddrinfo() failed", gai_strerror(return_value));
+		perror("getaddrinfo() failed");
 	}
 	
 	//Create socket for incoming connections
@@ -86,7 +74,7 @@ int setupServerTCPSocket(const char *service){
 			address_size = sizeof(local_address);
 			//Get socket name
 			if (getsockname(server_socket, (struct sockaddr*)&local_address, &address_size) < 0){
-				dieWithSystemMessage("getsockname() failed");
+				perror("getsockname() failed");
 			}
 			//Output local address and port of socket(listening address and port)
 			fputs("Binding to ", stdout);
@@ -128,7 +116,7 @@ UDP_SOCKET_INFO *setupServerUDPSocket(const char *host, const char *service){
 	return_value = getaddrinfo(host, service, &address_criteria, &server_address);
 	//Success returns zero
 	if (return_value != 0){
-		dieWithUserMessage("getaddrinfo() failed", gai_strerror(return_value));
+		perror("getaddrinfo() failed");
 	}
 
 	//Create socket for connecting the server
@@ -171,7 +159,7 @@ int acceptTCPConnection(int server_socket){
 	//Wait for a client to connect
 	client_socket = accept(server_socket, (struct sockaddr*)&client_address, &client_address_length);
 	if (client_socket < 0){
-		dieWithSystemMessage("accept() failed");
+		perror("accept() failed");
 	}
 	
 	//Now, client_socket is connected to a client

@@ -36,7 +36,7 @@ u_int32 getVideoInfo(char *url){
 	//Open video stream channel
 	video_channel = fopen(url, "r");
 	if (video_channel == NULL){
-		dieWithUserMessage("fopen() failed", "unable to open video file!");
+		perror("fopen() failed");
 	}
 	//First get the frame length
 	while (fread(frame_length, NUMBER_SIZE, ONE_SIZE, video_channel) == 1){
@@ -158,14 +158,11 @@ u_int8 *constructRTPPacket(size_t *length){
 
 	//Open video file stream
 	video_channel = fopen(video_file_name, "r");
-	if (video_channel == NULL){
-		dieWithUserMessage("fopen() failed", "unable to open video file!");
-	}
 	//Seek the next frame start position
 	fseek(video_channel, next_frame_start, 0);
 	//First step: read the length of frame
 	if (fread(frame_length, NUMBER_SIZE, ONE_SIZE, video_channel) != 1){
-		dieWithUserMessage("fread() failed", "unable to read frame length!");
+		perror("fread() failed");
 	}
 	//Set the next frame start position
 	next_frame_start += NUMBER_SIZE;
@@ -182,7 +179,7 @@ u_int8 *constructRTPPacket(size_t *length){
 	setRTPPacketHeader(rtp_head);
 	//Second step: read the frame content according to the frame length
 	if ((fread(frame_content, *length, ONE_SIZE, video_channel) != 1)){
-		dieWithUserMessage("fread() failed", "unable to read frame content!");
+		perror("fread() failed: unable to read frame content!");
 	}
 	//Add the frame content into the buffer
 	for (count = 0; count < (*length); count++){
@@ -219,7 +216,7 @@ void catchAlarm(int ignored){
 	//Create socket for sending rtp packets
 	udp_server_socket = setupServerUDPSocket(rtp_address, itoa(client_rtp_port));
 	if (udp_server_socket->socket < 0){
-		dieWithSystemMessage("setupServerUDPSocket() failed");
+		perror("setupServerUDPSocket() failed");
 	}
 	//Output the socket address and port
 	fputs("Sending RTP packet to client ", stdout);
@@ -236,10 +233,10 @@ void catchAlarm(int ignored){
 							udp_server_socket->address->ai_addrlen);
 	//Test the sending is successful
 	if (number_bytes < 0){
-		dieWithSystemMessage("sendto() failed");
+		perror("sendto() failed");
 	}
 	else if (number_bytes != (RTP_HEAD_SIZE + length)){
-		dieWithUserMessage("sendto() error", "send unexpected number of bytes!");
+		perror("sendto() error: send unexpected number of bytes!");
 	}
 	//Close server socket
 	close(udp_server_socket->socket);

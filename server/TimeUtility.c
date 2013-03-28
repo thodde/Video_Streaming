@@ -1,28 +1,12 @@
-//////////////////////////////////////////////////////////
-/*
-	File Name:		TimeUtility.c
-	Author:			Trevor Hodde
-	Note:			This TimeUtility.c file includes 
-					Handle Time Functions.
-*/
-//////////////////////////////////////////////////////////
+/**
+ *	File Name:	TimeUtility.c
+ *	Author:		Trevor Hodde
+ */
 
-///////////////HEADER FILES///////////////
 #include <sys/stat.h>
 #include <time.h>
 #include "Server.h"
 
-///////////////FUNCTIONS///////////////
-/*Set Timer Function
-  Variable Definition:
-  -- timer: itimerval structure
-  -- type: timer type
-  -- interval_sec: it_interval seconds
-  -- interval_usec: it_interval microseconds
-  -- value_sec: it_value seconds
-  -- value_usec: it_value microseconds
-  Return value: NULL
-*/
 void setTimer(	struct itimerval	timer,
 				int					type,
 				u_int32				interval_sec,
@@ -38,17 +22,12 @@ void setTimer(	struct itimerval	timer,
 
 	//Set the timer
 	if (setitimer(type, &timer, NULL) != 0){
-		dieWithSystemMessage("setitimer() failed");
+		perror("setitimer() failed");
 	}
 
 	return;
 }
-/*Get GMT Time Function (including System time and File time)
-  Variable Definition:
-  -- url: the request url except domain name and port number
-  -- signal_value: signal that decide which kind of time needed
-  Return value: tm struct in GMT Format
-*/
+
 struct tm *getTimeInGMTFormat(char *url, int signal_value){
 	struct stat		file_information;	//file information sstructure
 	time_t			t;					//time structure
@@ -70,7 +49,7 @@ struct tm *getTimeInGMTFormat(char *url, int signal_value){
 	}
 	//Cannot find the file information
 	else{
-		dieWithUserMessage("stat() failed(cannot find the file information), file name", url);
+		perror("stat() failed(cannot find the file information)");
 	}
 	
 	return gmtime(&t);

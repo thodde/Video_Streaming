@@ -3,7 +3,7 @@
 # use make command under current directory
 
 # Variable Definition
-OBJS = MainFunction.o Thread.o ServerUtility.o AddressUtility.o HandleRequestUtility.o RTPPacketUtility.o SendUtility.o FileUtility.o TimeUtility.o StringUtility.o DieWithMessage.o
+OBJS = MainFunction.o Thread.o ServerUtility.o AddressUtility.o HandleRequestUtility.o RTPPacketUtility.o SendUtility.o FileUtility.o TimeUtility.o StringUtility.o 
 LIBS = -lpthread
 CC = gcc
 CFLAGS = -Wall -O -g

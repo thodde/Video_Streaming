@@ -1,24 +1,10 @@
-////////////////////////////////////////////////////////////
 /*
 	File Name:		SendUtility.c
 	Author:			Trevor Hodde
-	Note:			This SendUtility.c file includes 
-					Send Server Response Message Functions.
 */
-////////////////////////////////////////////////////////////
 
-///////////////HEADER FILES///////////////
 #include "Server.h"
 
-///////////////FUNCTIONS///////////////
-/*Send OK Function
-  Variable Definition:
-  -- url: the request url except domain name and port number
-  -- method: the request method
-  -- cseq: cseq number
-  -- client_socket: socket connected to the client
-  Return Value: NULL
-*/
 void sendOK(char *url, const char *method, u_int32 cseq, int client_socket){
 	//Handle the SETUP method
 	if (methodIsSetup(method)){
