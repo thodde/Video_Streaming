@@ -1,30 +1,11 @@
-////////////////////////////////////////////////////////////////
 /*
 	File Name:		Client.h
 	Author:			Trevor Hodde
-	Note:			This Client.h file includes
-					HEADER FILES, MACRO, STRUCT DEFINITION,
-					GLOBAL VARIABLE AND FUNCTION DECLARATION.
 */
-////////////////////////////////////////////////////////////////
 
-///////////////PRECOMPILER///////////////
 #ifndef	CLIENT_H_
 #define CLIENT_H_
 
-///////////////DEBUG///////////////
-#define DEBUG 1
-#ifdef DEBUG
-	#define DEBUG_PRINT		printf("%s-%s:%d:", __FILE__, __FUNCTION__, __LINE__)
-	#define	DEBUG_START		fputs("/***********DEBUG INFORMATION***********/\n", stdout)
-	#define DEBUG_END		fputs("/******************END******************/\n", stdout)
-#else
-	#define DEBUG_PRINT
-	#define DEBUG_START
-	#define DEBUG_END
-#endif
-
-///////////////HEADER FILES///////////////
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -35,7 +16,6 @@
 #include <netdb.h>
 #include <gtk/gtk.h>
 
-///////////////MACRO///////////////
 #define	CLIENT_RTP_PORT	25000
 #define	WINDOW_TITLE	"Streaming Video Player"
 #define	PROTOCOL_TYPE	"RTP/UDP"
@@ -45,7 +25,6 @@
 #define	SCREEN_NAME		"../icon/Screenshot"
 #define	CRLF			"\r\n"
 
-///////////////CONSTANTS VARIABLES///////////////
 enum	widget_size_constants{	//widget size constants
 	BORDER_WIDTH_SIZE	= 1,
 	BOX_SPACING_SIZE	= 2,
@@ -78,7 +57,6 @@ enum	status_constants{		//rtsp client status constants
 enum	method_constants{		//rtsp method constants
 	SETUP,
 	PLAY,
-	PAUSE,
 	TEARDOWN,
 };
 enum	rtp_parameters{			//rtp parameters constants
@@ -132,7 +110,6 @@ GtkWidget	*toolbar;			//toolbar widget
 GtkWidget	*image;				//image widget
 GtkWidget	*setupButton;		//setup button widget
 GtkWidget	*playButton;		//play button widget
-GtkWidget	*pauseButton;		//pause button widget
 GtkWidget	*teardownButton;	//teardown button widget
 u_int32		session_id;			//seesion id number
 u_int32		cseq_number;		//cseq number
@@ -170,7 +147,6 @@ GtkWidget	*getButton(	GtkWidget 	*box,
 						const gchar *tooltip_label);
 void	setSensitive(	gboolean setup_s,
 						gboolean play_s,
-						gboolean pause_s,
 						gboolean teardown_s);
 void	setImage(const u_int8 *rtp);
 GdkPixbuf	*getIcon(const gchar *icon_name);
@@ -181,7 +157,6 @@ void	menuCallback(	gpointer	callback_data,
 						GtkWidget	*menu_item);
 void	setupRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data);
 void	playRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data);
-void	pauseRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data);
 void	teardownRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data);
 void	showToolbar(	gpointer	callback_data,
 						guint		callback_action,

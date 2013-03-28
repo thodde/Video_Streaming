@@ -1,24 +1,12 @@
-////////////////////////////////////////////////////////////////
 /*
 	File Name:		CallbackUtility.c
 	Author:			Trevor Hodde
-	Note:			This CallbackUtility.c file includes
-					Handle GTK Widget Signal Callback Function.
 */
-////////////////////////////////////////////////////////////////
 
-///////////////HEADER FILES///////////////
 #include "Client.h"
 
-///////////////GLOBAL VARIABLE///////////////
 static CLIENT_DATA	*client;		//_client_data structure node
 
-///////////////FUNCTIONS///////////////
-/*Initialize Widget Callback Function
-  Variable Definition:
-  -- client_data: _client_data structure node
-  Return Value: NULL
-*/
 void initCallback(CLIENT_DATA *client_data){
 	GtkToolItem		*tool_item;		//tool item widget
 
@@ -28,20 +16,16 @@ void initCallback(CLIENT_DATA *client_data){
 	//Set a handler for enter that change the button's background color
 	g_signal_connect(setupButton, "enter", G_CALLBACK(enterButtonCallback), NULL);
 	g_signal_connect(playButton, "enter", G_CALLBACK(enterButtonCallback), NULL);
-	g_signal_connect(pauseButton, "enter", G_CALLBACK(enterButtonCallback), NULL);
 	g_signal_connect(teardownButton, "enter", G_CALLBACK(enterButtonCallback), NULL);
 	//Set a handler for clicked that handle RTSP request & response message
 	g_signal_connect(setupButton, "clicked", G_CALLBACK(setupRTSPCallback), client_data);
 	g_signal_connect(playButton, "clicked", G_CALLBACK(playRTSPCallback), client_data);
-	g_signal_connect(pauseButton, "clicked", G_CALLBACK(pauseRTSPCallback), client_data);
 	g_signal_connect(teardownButton, "clicked", G_CALLBACK(teardownRTSPCallback), client_data);
 	//Set a handler for clicked that handle RTSP request & response message
 	tool_item = gtk_toolbar_get_nth_item(GTK_TOOLBAR(toolbar), SETUP);
 	g_signal_connect(tool_item, "clicked", G_CALLBACK(setupRTSPCallback), client_data);
 	tool_item = gtk_toolbar_get_nth_item(GTK_TOOLBAR(toolbar), PLAY);
 	g_signal_connect(tool_item, "clicked", G_CALLBACK(playRTSPCallback), client_data);
-	tool_item = gtk_toolbar_get_nth_item(GTK_TOOLBAR(toolbar), PAUSE);
-	g_signal_connect(tool_item, "clicked", G_CALLBACK(pauseRTSPCallback), client_data);
 	tool_item = gtk_toolbar_get_nth_item(GTK_TOOLBAR(toolbar), TEARDOWN);
 	g_signal_connect(tool_item, "clicked", G_CALLBACK(teardownRTSPCallback), client_data);
 	//Set a handler for delete_event that exits GTK
@@ -54,13 +38,6 @@ void initCallback(CLIENT_DATA *client_data){
 	return;
 }
 
-/*Menu Callback Function
-  Variable Definition:
-  -- callback_data: callback function data
-  -- callback_action: callback function action code
-  -- menu_item: callback function widget
-  Return Value: NULL
-*/
 void menuCallback(gpointer callback_data, guint callback_action, GtkWidget *menu_item){
 	//According to the callback_action, call the special function
 	switch (callback_action){
@@ -71,10 +48,6 @@ void menuCallback(gpointer callback_data, guint callback_action, GtkWidget *menu
 		case PLAY:
 			//PLAY callback function
 			playRTSPCallback(menu_item, client);
-			break;
-		case PAUSE:
-			//PAUSE callback function
-			pauseRTSPCallback(menu_item, client);
 			break;
 		case TEARDOWN:
 			//TEARDOWN callback function
@@ -121,13 +94,6 @@ void setupRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data){
 																								client_rtp_port, CRLF,
 																								MY_NAME, CRLF, CRLF);
 
-#ifdef	DEBUG
-	DEBUG_START;
-	fputs("SETUP request message:\n", stdout);
-	fputs(buffer, stdout);
-	DEBUG_END;
-#endif
-
 	//Set the buffer length
 	message_length = strlen(buffer);
 	//Send SETUP request message to the server
@@ -148,7 +114,7 @@ void setupRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data){
 		//Set the client status
 		status = READY;
 		//Set the buttons', toolbars', and menus' sensitive property
-		setSensitive(FALSE, TRUE, FALSE, TRUE);
+		setSensitive(FALSE, TRUE, TRUE);
 		//Show the setup complete window
 		showInfoCallback(client_data->window, "Setup complete!");
 	}
@@ -191,13 +157,6 @@ void playRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data){
 																								session_id, CRLF,
 																								MY_NAME, CRLF, CRLF);
 
-#ifdef	DEBUG
-	DEBUG_START;
-	fputs("PLAY request message:\n", stdout);
-	fputs(buffer, stdout);
-	DEBUG_END;
-#endif
-
 	//Set the buffer length
 	message_length = strlen(buffer);
 	//Send PLAY request message to the server
@@ -218,84 +177,13 @@ void playRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data){
 		//Set the client status
 		status = PLAYING;
 		//Set the buttons', toolbars' and menus' sensitive property
-		setSensitive(FALSE, FALSE, TRUE, TRUE);
+		setSensitive(FALSE, FALSE, TRUE);
 	}
 	//Close client socket
 	close(client_socket);
 
 	//Start RTP progress
 	startRTPProgress(client_data);
-
-	return;
-}
-
-/*PAUSE method Callback Function
-  Variable Definition:
-  -- widget: callback function widget
-  -- client_data: callback function widget
-  Return Value: NULL
-*/
-void pauseRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data){
-	gchar		*buffer;					//request message buffer
-	gint		client_socket = -1;			//socket descriptor for client
-	gint		bytes = 0;					//number of bytes
-	size_t		message_length;				//request message length
-
-	//Create a connected TCP socket
-	client_socket = setupClientTCPSocket(client_data->host, client_data->service);
-	if (client_socket < 0){
-		showErrorCallback(client_data->window, "setupClientSocket() failed: unable to connect!");
-		return;
-	}
-	//Initialize request message buffer
-	buffer = g_malloc(sizeof(gchar) * (BUFFER_SIZE));
-	//Increase the cseq number
-	cseq_number++;
-	//Constuct RTSP PAUSE request message
-	sprintf(buffer, "PAUSE rtsp://%s:%s/%s RTSP/1.0%s"	\
-					"CSeq: %u%s"	\
-					"Session: %u%s"	\
-					"User-Agent: Multimedia Networks: RTSP client by %s (Unix)%s%s",	client_data->host,
-																								client_data->service,
-																								client_data->video, CRLF,
-																								cseq_number, CRLF,
-																								session_id, CRLF,
-																								MY_NAME, CRLF, CRLF);
-
-#ifdef	DEBUG
-	DEBUG_START;
-	fputs("PAUSE request message:\n", stdout);
-	fputs(buffer, stdout);
-	DEBUG_END;
-#endif
-
-	//Set the buffer length
-	message_length = strlen(buffer);
-	//Send PAUSE request message to the server
-	bytes = send(client_socket, buffer, message_length, MSG_NOSIGNAL);
-	//Test the send is successful
-	if (bytes < 0){
-		showErrorCallback(client_data->window, "send() failed");
-		return;
-	}
-	else if (bytes != message_length){
-		showErrorCallback(client_data->window, "send() error: sent unexpected number of bytes!");
-		return;
-	}
-
-	//Now, start receiving the RTSP response message
-	//Handle Server Response Message
-	if (handleServerResponse(client_data->window, client_socket)){
-		//Set the client status
-		status = READY;
-		//Set the buttons', toolbars' and menus' sensitive property
-		setSensitive(FALSE, TRUE, FALSE, TRUE);
-	}
-	//Close client socket
-	close(client_socket);
-
-	//Stop RTP progress
-	stopRTPProgress(status);
 
 	return;
 }
@@ -333,13 +221,6 @@ void teardownRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data){
 																								session_id, CRLF,
 																								MY_NAME, CRLF, CRLF);
 
-#ifdef	DEBUG
-	DEBUG_START;
-	fputs("TEARDOWN request message:\n", stdout);
-	fputs(buffer, stdout);
-	DEBUG_END;
-#endif
-
 	//Set the buffer length
 	message_length = strlen(buffer);
 	//Send TEARDOWN request message to the server
@@ -360,7 +241,7 @@ void teardownRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data){
 		//Set the client status
 		status = INIT;
 		//Set the buttons', toolbars and menus' sensitive property
-		setSensitive(TRUE, FALSE, FALSE, FALSE);
+		setSensitive(TRUE, FALSE, FALSE);
 	}
 	//Close client socket
 	close(client_socket);
@@ -409,14 +290,8 @@ void showAboutCallback(GtkWidget *widget, gpointer data){
 	dialog = gtk_about_dialog_new();
 	//Set the name of dialog
 	gtk_about_dialog_set_name(GTK_ABOUT_DIALOG(dialog), WINDOW_TITLE);
-	//Set the version of dialog
-	gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(dialog), "1.0");
-	//Set the copyright of dialog
-	gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(dialog), "(C) Trevor Hodde");
 	//Set the comment of dialog
 	gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(dialog), "Streaming Video Player is a simple media player using RTSP & RTP protocols");
-	//Set the website of dialog
-	gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(dialog), "http://cs.nyu.edu/~f1226201/assignments/StreamingVideoAssignment.html");
 	//Set the logo of dialog
 	gtk_about_dialog_set_logo(GTK_ABOUT_DIALOG(dialog), pixbuf);
 

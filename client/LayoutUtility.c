@@ -1,21 +1,14 @@
-///////////////////////////////////////////////////////////
 /*
 	File Name:		LayoutUtility.c
 	Author:			Trevor Hodde
-	Note:			This LayoutUtility.c file includes
-					GTK Widget Layout Function.
 */
-///////////////////////////////////////////////////////////
 
-///////////////HEADER FILES///////////////
 #include "Client.h"
 
-///////////////GLOBAL VARIABLE///////////////
 static GtkItemFactoryEntry		menu_items[] = {							//item factory entry array
 	{"/_Media",					NULL,			NULL,					0,			"<Branch>"								},
 	{"/Media/_Setup",			"<control>S",	menuCallback,			SETUP,		"<StockItem>",	GTK_STOCK_NETWORK		},
 	{"/Media/_Play",			"<control>P",	menuCallback,			PLAY,		"<StockItem>",	GTK_STOCK_MEDIA_PLAY	},
-	{"/Media/Pa_use",			"<control>U",	menuCallback,			PAUSE,		"<StockItem>",	GTK_STOCK_MEDIA_PAUSE	},
 	{"/Media/_Teardown",		"<control>T",	menuCallback,			TEARDOWN,	"<StockItem>",	GTK_STOCK_MEDIA_STOP	},
 	{"/Media/sep1",				NULL,			NULL,					0,			"<Separator>"							},
 	{"/Media/_Quit",			"<CTRL>Q",		deleteEventCallback,	0,			"<StockItem>",	GTK_STOCK_QUIT			},
@@ -76,13 +69,11 @@ void initClientLayout(GtkWidget *window){
 	setupButton = getButton(button_hbox, GTK_STOCK_NETWORK, "Setup", "Setup RTSP Connection");
 	//Create the play button
 	playButton = getButton(button_hbox, GTK_STOCK_MEDIA_PLAY, "Play", "Play Streaming Video");
-	//Create the pause button
-	pauseButton = getButton(button_hbox, GTK_STOCK_MEDIA_PAUSE, "Pause", "Pause Streaming Video");
 	//Create the teardown button
 	teardownButton = getButton(button_hbox, GTK_STOCK_MEDIA_STOP, "Teardown", "Teardown RTSP Connection");
 
 	//Set the sensitive property of buttons
-	setSensitive(TRUE, FALSE, FALSE, FALSE);
+	setSensitive(TRUE, FALSE, FALSE);
 
 	return;
 }
@@ -139,12 +130,6 @@ GtkWidget *getToolbar(){
 	tool_item = gtk_tool_button_new_from_stock(GTK_STOCK_MEDIA_PLAY);
 	//Set the tooltip on the tool item
 	gtk_tooltips_set_tip(tooltip, GTK_WIDGET(tool_item), "Play", NULL);
-	//Insert the tool item into toolbar
-	gtk_toolbar_insert(GTK_TOOLBAR(toolbar), tool_item, -1);
-	//Create the pause tool item
-	tool_item = gtk_tool_button_new_from_stock(GTK_STOCK_MEDIA_PAUSE);
-	//Set the tooltip on the tool item
-	gtk_tooltips_set_tip(tooltip, GTK_WIDGET(tool_item), "Pause", NULL);
 	//Insert the tool item into toolbar
 	gtk_toolbar_insert(GTK_TOOLBAR(toolbar), tool_item, -1);
 	//Create the teardown tool item
@@ -221,13 +206,11 @@ GtkWidget *getButton(	GtkWidget *box,
   Variable Definition:
   -- setup_s: setup button sensitive
   -- play_s: play button sensitive
-  -- pause_s: pause button sensitive
   -- teardown_s: teardown button sensitive
   Return Value: NULL
 */
 void setSensitive(	gboolean setup_s,
 					gboolean play_s,
-					gboolean pause_s,
 					gboolean teardown_s){
 	GtkWidget		*menu_item;		//menu item widget
 	GtkToolItem		*tool_item;		//tool item widget
@@ -237,22 +220,17 @@ void setSensitive(	gboolean setup_s,
 	gtk_widget_set_sensitive(menu_item, setup_s);
 	menu_item = gtk_item_factory_get_widget(item_factory, "/Media/Play");
 	gtk_widget_set_sensitive(menu_item, play_s);
-	menu_item = gtk_item_factory_get_widget(item_factory, "/Media/Pause");
-	gtk_widget_set_sensitive(menu_item, pause_s);
 	menu_item = gtk_item_factory_get_widget(item_factory, "/Media/Teardown");
 	gtk_widget_set_sensitive(menu_item, teardown_s);
 	//Set the sensitive property of buttons
 	gtk_widget_set_sensitive(setupButton, setup_s);
 	gtk_widget_set_sensitive(playButton, play_s);
-	gtk_widget_set_sensitive(pauseButton, pause_s);
 	gtk_widget_set_sensitive(teardownButton, teardown_s);
 	//Set the sensitive property of tool items
 	tool_item = gtk_toolbar_get_nth_item(GTK_TOOLBAR(toolbar), SETUP);
 	gtk_widget_set_sensitive(GTK_WIDGET(tool_item), setup_s);
 	tool_item = gtk_toolbar_get_nth_item(GTK_TOOLBAR(toolbar), PLAY);
 	gtk_widget_set_sensitive(GTK_WIDGET(tool_item), play_s);
-	tool_item = gtk_toolbar_get_nth_item(GTK_TOOLBAR(toolbar), PAUSE);
-	gtk_widget_set_sensitive(GTK_WIDGET(tool_item), pause_s);
 	tool_item = gtk_toolbar_get_nth_item(GTK_TOOLBAR(toolbar), TEARDOWN);
 	gtk_widget_set_sensitive(GTK_WIDGET(tool_item), teardown_s);
 
