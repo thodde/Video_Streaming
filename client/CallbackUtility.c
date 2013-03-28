@@ -113,7 +113,7 @@ void setupRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data){
 	sprintf(buffer, "SETUP rtsp://%s:%s/%s RTSP/1.0%s"	\
 					"CSeq: %u%s"	\
 					"Transport: %s; %s; client_port=%d; mode=PLAY%s"	\
-					"User-Agent: Data Communications & Networks: RTSP client by %s (Unix)%s%s",	client_data->host,
+					"User-Agent: Multimedia Networks: RTSP client by %s (Unix)%s%s",	client_data->host,
 																								client_data->service,
 																								client_data->video, CRLF,
 																								cseq_number, CRLF,
@@ -184,7 +184,7 @@ void playRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data){
 	sprintf(buffer, "PLAY rtsp://%s:%s/%s RTSP/1.0%s"	\
 					"CSeq: %u%s"	\
 					"Session: %u%s"	\
-					"User-Agent: Data Communications & Networks: RTSP client by %s (Unix)%s%s",	client_data->host,
+					"User-Agent: Multimedia Networks: RTSP client by %s (Unix)%s%s",	client_data->host,
 																								client_data->service,
 																								client_data->video, CRLF,
 																								cseq_number, CRLF,
@@ -255,7 +255,7 @@ void pauseRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data){
 	sprintf(buffer, "PAUSE rtsp://%s:%s/%s RTSP/1.0%s"	\
 					"CSeq: %u%s"	\
 					"Session: %u%s"	\
-					"User-Agent: Data Communications & Networks: RTSP client by %s (Unix)%s%s",	client_data->host,
+					"User-Agent: Multimedia Networks: RTSP client by %s (Unix)%s%s",	client_data->host,
 																								client_data->service,
 																								client_data->video, CRLF,
 																								cseq_number, CRLF,
@@ -326,7 +326,7 @@ void teardownRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data){
 	sprintf(buffer, "TEARDOWN rtsp://%s:%s/%s RTSP/1.0%s"	\
 					"CSeq: %u%s"	\
 					"Session: %u%s"	\
-					"User-Agent: Data Communications & Networks: RTSP client by %s (Unix)%s%s",	client_data->host,
+					"User-Agent: Multimedia Networks: RTSP client by %s (Unix)%s%s",	client_data->host,
 																								client_data->service,
 																								client_data->video, CRLF,
 																								cseq_number, CRLF,

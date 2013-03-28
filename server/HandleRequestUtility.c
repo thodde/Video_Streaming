@@ -265,7 +265,7 @@ int	constructResponseMessage(	int				client_socket,
 	//Response Date field
 	bytes += fprintf(channel, "Date: %s%s", convertTimeFormat(getTimeInGMTFormat(NULL, 0), 1), CRLF);
 	//Response Server field
-	bytes += fprintf(channel, "Server: Data Communications & Networks: RTSP server by %s (Unix)%s", MY_NAME, CRLF);
+	bytes += fprintf(channel, "Server: Multimedia Networks: RTSP server by %s (Unix)%s", MY_NAME, CRLF);
 	//Response Last-Modified field
 	if (last_modified_time){
 		bytes += fprintf(channel, "Last-Modified: %s%s", last_modified_time, CRLF);
