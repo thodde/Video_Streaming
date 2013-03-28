@@ -1,7 +1,7 @@
-/*
-	File Name:		MainFunction.c
-	Author:			Trevor Hodde
-*/
+/**
+ *	File Name:	MainFunction.c
+ *	Author:		Trevor Hodde
+ */
 
 #include <pthread.h>
 #include <signal.h>
@@ -26,8 +26,6 @@ int main(int argc, char *argv[]){
 	if (sigfillset(&handler.sa_mask) < 0){
 		perror("sigfillset() failed");
 	}
-	/*Set SA_RESTART flags is very important,
-	  accept could not be interrupted by timer*/
 	handler.sa_flags = SA_RESTART;
 	//Set the "SIGALRM" signal
 	if (sigaction(SIGALRM, &handler, 0) < 0){

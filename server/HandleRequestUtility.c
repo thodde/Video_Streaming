@@ -18,10 +18,9 @@ void handleClientRequest(int client_socket){
 		perror("fdopen() failed");
 	}
 	
-	//Get client Request Line (Jump the blank line)
-	do{
+	do {
 		return_value = fgets(request_line, STRING_SIZE, channel);
-	}while (syntaxChecking(return_value, BLANK_LINE));
+	} while (syntaxChecking(return_value, BLANK_LINE));
 	//Output the client_socket id and Request Line
 	printf("Got a call on %d: request = %s", client_socket, request_line);
 	//Get client Header Lines & Response the client request
@@ -36,13 +35,12 @@ void handleClientRequest(int client_socket){
 }
 
 void respondClientRequest(char *request, RTSP_HEADER *header, int client_socket){
-	char 		method[STRING_SIZE];			//method field: SETUP, PLAY, PAUSE, or TEARDOWN
-	char 		url[STRING_SIZE];				//url field: for example, rtsp://localhost:5678/movie.Mjpeg
-	char 		version[STRING_SIZE];			//rtsp version field: RTSP/1.0
+	char 		method[STRING_SIZE];			//method field: SETUP, PLAY, or TEARDOWN
+	char 		url[STRING_SIZE];
+	char 		version[STRING_SIZE];
 	char		field_value[HALFBUF_SIZE];		//field value string
 	u_int32		cseq_number = 0;				//cseq number
 	
-	//Initialize method, url, version, and field_value buffer
 	memset(method, 0, STRING_SIZE);
 	memset(url, 0, STRING_SIZE);
 	memset(version, 0, STRING_SIZE);
@@ -94,10 +92,6 @@ void respondClientRequest(char *request, RTSP_HEADER *header, int client_socket)
 	if (urlNotExist(url)){
 		return;
 	}
-	//Test the requested url is a directory
-	else if (urlIsADirectory(url)){
-		return;
-	}
 	//Test the method is valid in special state
 	else if (methodIsNotValidInState(method)){
 		return;
@@ -130,20 +124,6 @@ void respondClientRequest(char *request, RTSP_HEADER *header, int client_socket)
 	}
 }
 
-/*Construct Response Message to Client Function
-  Variable Definition:
-  -- client_socket: socket connected to the client
-  -- stream: file stream of socket or server file
-  -- status_code: response status code
-  -- status_message: response status message
-  -- cseq_number: cseq number
-  -- transport: transport field
-  -- last_modified_time: response last modified time field
-  -- content_length: response content length field
-  -- content_type: response content type field
-  -- content: response entity body field
-  Return Value: bytes of whole message
-*/
 int	constructResponseMessage(	int				client_socket,
 								FILE 			**stream,
 								int				status_code,
@@ -212,11 +192,6 @@ int	constructResponseMessage(	int				client_socket,
 	return bytes;
 }
 
-/*Get Header Lines Function
-  Variable Definition:
-  -- stream: file stream for client socket
-  Return Value: header pointer of header lines structure
-*/
 RTSP_HEADER *getHeaderLines(FILE *stream){
 	RTSP_HEADER 	*header;					//_rtsp_header structure head pointer
 	RTSP_HEADER 	*node;						//_rtsp_header structure node
@@ -259,11 +234,6 @@ RTSP_HEADER *getHeaderLines(FILE *stream){
 	return header;
 }
 
-/*Get RTSP Client Request Information Function
-  Variable Definition:
-  -- header: _rtsp_header structure header pointer
-  Return Value: if session value is incorrect, return 0, else return cseq number
-*/
 u_int32 getRTSPInfo(RTSP_HEADER *header){
 	RTSP_HEADER		*node;					//_rtsp_header structure node
 	char			*number_string;			//client number string (including port number and range number)
@@ -331,12 +301,6 @@ u_int32 getRTSPInfo(RTSP_HEADER *header){
 	return cseq_number;
 }
 
-/*Generate a Random Integer to Obtain Session ID or SSRC Function
-  Variable Definition:
-  -- bas_number: basic number
-  -- mod_number: mod number
-  Return Value: session id or SSRC
-*/
 u_int32 getRandomNumber(int bas_number, u_int32 mod_number){
 	struct timeval	*random_time;		//timeval structure
 	u_int32			ran_number;			//random number

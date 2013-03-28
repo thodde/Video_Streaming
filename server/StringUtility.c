@@ -114,7 +114,7 @@ void pathBelowCurrentDirectory(char *url){
 */
 bool methodNotAllow(char *method){
 	return ((strcmp(method, "SETUP") != 0) && (strcmp(method, "PLAY") != 0)
-			&& (strcmp(method, "PAUSE") != 0) && (strcmp(method, "TEARDOWN") != 0));
+			&& (strcmp(method, "TEARDOWN") != 0));
 }
 
 /*Check Header Lines Function
@@ -206,15 +206,6 @@ bool methodIsPlay(const char *method){
 	return strcmp(method, "PLAY") == 0;
 }
 
-/*Test Method is PAUSE Function
-  Variable Definition:
-  -- method: the request method
-  Return Value: if the method is PAUSE, return 1; else return 0
-*/
-bool methodIsPause(const char *method){
-	return strcmp(method, "PAUSE") == 0;
-}
-
 /*Test Method is TEARDOWN Function
   Variable Definition:
   -- method: the request method
@@ -232,8 +223,8 @@ bool methodIsTeardown(const char *method){
 bool methodIsNotValidInState(const char *method){
 	//Test the status is INIT
 	if (status == INIT){
-		//PLAY and PAUSE method is not valid
-		return (methodIsPlay(method) || methodIsPause(method));
+		//PLAY method is not valid
+		return (methodIsPlay(method));
 	}
 	//Test the status is READY or PLAYING
 	else{

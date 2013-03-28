@@ -49,25 +49,7 @@ void sendOK(char *url, const char *method, u_int32 cseq, int client_socket){
 		//Start RTP progress
 		startRTPProgress();
 	}
-	else if (methodIsPause(method)){
-		//PAUSE method Response Message
-		constructResponseMessage(	client_socket,
-									NULL,
-									200,
-									"OK",
-									cseq,
-									NULL,
-									convertTimeFormat(getTimeInGMTFormat(url, 2), 1),
-									0,
-									NULL,
-									NULL);
-		//Set the status
-		status = READY;
-		//Stop RTP Progress
-		stopRTPProgress();
-	}
 	else if (methodIsTeardown(method)){
-		//PAUSE method Response Message
 		constructResponseMessage(	client_socket,
 									NULL,
 									200,

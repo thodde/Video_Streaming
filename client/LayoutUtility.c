@@ -11,7 +11,6 @@ static GtkItemFactoryEntry		menu_items[] = {							//item factory entry array
 	{"/Media/_Play",			"<control>P",	menuCallback,			PLAY,		"<StockItem>",	GTK_STOCK_MEDIA_PLAY	},
 	{"/Media/_Teardown",		"<control>T",	menuCallback,			TEARDOWN,	"<StockItem>",	GTK_STOCK_MEDIA_STOP	},
 	{"/Media/sep1",				NULL,			NULL,					0,			"<Separator>"							},
-	{"/Media/_Quit",			"<CTRL>Q",		deleteEventCallback,	0,			"<StockItem>",	GTK_STOCK_QUIT			},
 	{"/_View",					NULL,			NULL,					0,			"<Branch>"								},
 	{"/View/tear",				NULL,			NULL,					0,			"<Tearoff>"								},
 	{"/View/Toolbar",			NULL,			showToolbar,			1,			"<CheckItem>"							},

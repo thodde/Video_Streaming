@@ -1,7 +1,3 @@
-# makefile
-#
-# use make command under current directory
-
 # Variable Definition
 OBJS = MainFunction.o ClientUtility.o HandleUtility.o RTPPacketUtility.o LayoutUtility.o CallbackUtility.o 
 CC = gcc

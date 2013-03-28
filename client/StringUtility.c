@@ -1,22 +1,11 @@
-////////////////////////////////////////////////////////////
 /*
 	File Name:		StringUtility.c
 	Author:			Trevor Hodde
-	Note:			This StringUtility.c file includes 
-					Handle String Functions.
 */
-////////////////////////////////////////////////////////////
 
-///////////////HEADER FILES///////////////
 #include <ctype.h>
 #include "Client.h"
 
-///////////////FUNCTIONS///////////////
-/*Convert int type to char* type Function
-  Variable Definition:
-  -- number: original number
-  Return Value: convert string
-*/
 char *itoa(int number){
 	int		i = number;													//number
 	int		j;															//counter
@@ -38,13 +27,6 @@ char *itoa(int number){
 	return string - j;
 }
 
-/*Test Header Field is not exist Function
-  Variable Definition:
-  -- header: _rtsp_header structure head pointer
-  -- field_name: field name
-  -- field_value: field value
-  Return Value: if field exist, return 1; else return 0
-*/
 bool fieldExist(RTSP_HEADER *header, const char *field_name, char *field_value){
 	RTSP_HEADER		*node;		//_rtsp_header structure node
 	
@@ -67,12 +49,6 @@ bool fieldExist(RTSP_HEADER *header, const char *field_name, char *field_value){
 	return (node != NULL);
 }
 
-/*Split the Name and Value of Header Line Function
-  Variable Definition:
-  -- header_line: client request header lines
-  -- stop: split character
-  Return Value: name of the header_line (before the stop of the header_line)
-*/
 char *splitNameAndValue(char *header_line, const char stop){
 	int		i = 0;															//counter for name
 	int 	j = 0;															//counter for value

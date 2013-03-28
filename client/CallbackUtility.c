@@ -10,9 +10,6 @@ static CLIENT_DATA	*client;		//_client_data structure node
 void initCallback(CLIENT_DATA *client_data){
 	GtkToolItem		*tool_item;		//tool item widget
 
-	//Set a handler for delete_event and destroy that exits GTK
-	g_signal_connect(client_data->window, "delete-event", G_CALLBACK(deleteEventCallback), NULL);
-	g_signal_connect(client_data->window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 	//Set a handler for enter that change the button's background color
 	g_signal_connect(setupButton, "enter", G_CALLBACK(enterButtonCallback), NULL);
 	g_signal_connect(playButton, "enter", G_CALLBACK(enterButtonCallback), NULL);
@@ -30,7 +27,6 @@ void initCallback(CLIENT_DATA *client_data){
 	g_signal_connect(tool_item, "clicked", G_CALLBACK(teardownRTSPCallback), client_data);
 	//Set a handler for delete_event that exits GTK
 	tool_item = gtk_toolbar_get_nth_item(GTK_TOOLBAR(toolbar), 5);
-	g_signal_connect_swapped(tool_item, "clicked", G_CALLBACK(deleteEventCallback), client_data->window);
 
 	//Set the global variable
 	client = client_data;
@@ -428,41 +424,3 @@ void enterButtonCallback(GtkWidget *widget, gpointer data){
 	return;
 }
 
-/*Delete Event Callback Function
-  Variable Definition:
-  -- widget: callback function widget
-  -- event: callback function event
-  -- data: callback function data
-  Return Value: NULL
-*/
-void deleteEventCallback(	GtkWidget *widget,
-							GdkEvent *event,
-							gpointer data){
-	GtkWidget	*dialog;		//dialog widget
-	gint		result;			//response type
-
-	//Create a question dialog
-	dialog = gtk_message_dialog_new(GTK_WINDOW(widget),
-									GTK_DIALOG_DESTROY_WITH_PARENT,
-									GTK_MESSAGE_QUESTION,
-									GTK_BUTTONS_YES_NO,
-									"Are you sure to quit?");
-	//Set the title of question dialog
-	gtk_window_set_title(GTK_WINDOW(dialog), "Question");
-	//Run the message dialog
-	result = gtk_dialog_run(GTK_DIALOG(dialog));
-
-	//Test the dialog response result
-	if (result == GTK_RESPONSE_NO || result == GTK_RESPONSE_DELETE_EVENT){
-		//Destroy the message dialog
-		gtk_widget_destroy(dialog);
-	}
-	else if (result == GTK_RESPONSE_YES){
-		//Destroy the message dialog
-		gtk_widget_destroy(dialog);
-		//Exit the GTK application immediately
-		gtk_main_quit();
-	}
-
-	return;
-}

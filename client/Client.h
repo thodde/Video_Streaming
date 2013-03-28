@@ -164,9 +164,6 @@ void	showErrorCallback(GtkWidget *widget, gpointer data);
 void	showQuesCallback(GtkWidget *widget, gpointer data);
 void	showWarnCallback(GtkWidget *widget, gpointer data);
 void	enterButtonCallback(GtkWidget *widget, gpointer data);
-void	deleteEventCallback(GtkWidget	*widget,
-							GdkEvent	*event,
-							gpointer	data);
 /*StringUtility.c*/
 char	*itoa(int number);
 bool	fieldExist(RTSP_HEADER *header, const char *field_name, char *field_value);

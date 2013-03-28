@@ -163,7 +163,6 @@ bool	fieldNotExist(RTSP_HEADER *header, const char *field_name, char *field_valu
 bool	urlIsADirectory(char *url);
 bool	methodIsSetup(const char *method);
 bool	methodIsPlay(const char *method);
-bool	methodIsPause(const char *method);
 bool	methodIsTeardown(const char *method);
 bool	methodIsNotValidInState(const char *method);
 bool	syntaxChecking(char *string, int signal_value);
