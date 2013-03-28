@@ -1,10 +1,7 @@
 /////////////////////////////////////////////////////////////////
 /*
 	File Name:		HandleRequestUtility.c
-	Instructor:		Prof. Arthur Goldberg
 	Author:			Trevor Hodde
-	UID:			N14361265
-	Department:		Computer Science
 	Note:			This HandleRequestUtility.c file includes 
 					Handle Client Request Functions.
 */

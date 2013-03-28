@@ -1,10 +1,7 @@
 ////////////////////////////////////////////////////////////
 /*
 	File Name:		SendUtility.c
-	Instructor:		Prof. Arthur Goldberg
 	Author:			Trevor Hodde
-	UID:			N14361265
-	Department:		Computer Science
 	Note:			This SendUtility.c file includes 
 					Send Server Response Message Functions.
 */

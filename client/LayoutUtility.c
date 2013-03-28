@@ -1,10 +1,7 @@
 ///////////////////////////////////////////////////////////
 /*
 	File Name:		LayoutUtility.c
-	Instructor:		Prof. Arthur Goldberg
 	Author:			Trevor Hodde
-	UID:			N14361265
-	Department:		Computer Science
 	Note:			This LayoutUtility.c file includes
 					GTK Widget Layout Function.
 */

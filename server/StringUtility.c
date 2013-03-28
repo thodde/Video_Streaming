@@ -1,10 +1,7 @@
 ////////////////////////////////////////////////////////////
 /*
 	File Name:		StringUtility.c
-	Instructor:		Prof. Arthur Goldberg
 	Author:			Trevor Hodde
-	UID:			N14361265
-	Department:		Computer Science
 	Note:			This StringUtility.c file includes 
 					Handle String Functions.
 */

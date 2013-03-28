@@ -1,10 +1,7 @@
 ///////////////////////////////////////////////////////
 /*
 	File Name:		Thread.c
-	Instructor:		Prof. Arthur Goldberg
 	Author:			Trevor Hodde
-	UID:			N14361265
-	Department:		Computer Science
 	Note:			This Thread.c file
 					includes Thread Main Function.
 */

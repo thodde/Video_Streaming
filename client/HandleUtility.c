@@ -1,10 +1,7 @@
 ////////////////////////////////////////////////////////
 /*
 	File Name:		HandleUtility.c
-	Instructor:		Prof. Arthur Goldberg
 	Author:			Trevor Hodde
-	UID:			N14361265
-	Department:		Computer Science
 	Note:			This HandleUtility.c file includes 
 					Handle Client Request Message and
 					Server Response Message Functions.

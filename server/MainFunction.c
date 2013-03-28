@@ -1,10 +1,7 @@
 ///////////////////////////////////////////////
 /*
 	File Name:		MainFunction.c
-	Instructor:		Prof. Arthur Goldberg
 	Author:			Trevor Hodde
-	UID:			N14361265
-	Department:		Computer Science
 	Note:			This MainFunction.c file
 					includes Main Function.
 */

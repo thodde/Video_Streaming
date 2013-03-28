@@ -1,10 +1,7 @@
 ////////////////////////////////////////////////////////////////
 /*
 	File Name:		Server.h
-	Instructor:		Prof. Arthur Goldberg
 	Author:			Trevor Hodde
-	UID:			N14361265
-	Department:		Computer Science
 	Note:			This Server.h file includes
 					HEADER FILES, MACRO, STRUCT DEFINITION,
 					GLOBAL VARIABLE AND FUNCTION DECLARATION.

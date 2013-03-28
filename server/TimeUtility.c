@@ -1,10 +1,7 @@
 //////////////////////////////////////////////////////////
 /*
 	File Name:		TimeUtility.c
-	Instructor:		Prof. Arthur Goldberg
 	Author:			Trevor Hodde
-	UID:			N14361265
-	Department:		Computer Science
 	Note:			This TimeUtility.c file includes 
 					Handle Time Functions.
 */

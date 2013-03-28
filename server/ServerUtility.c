@@ -1,10 +1,7 @@
 //////////////////////////////////////////////////////////////////////
 /*
 	File Name:		ServerUtility.c
-	Instructor:		Prof. Arthur Goldberg
 	Author:			Trevor Hodde
-	UID:			N14361265
-	Department:		Computer Science
 	Note:			This ServerUtility.c file includes 
 					Initialize RTSP Server, Setup TCP Socket,
 					Setup UDP Socket, and Connect Socket Function.

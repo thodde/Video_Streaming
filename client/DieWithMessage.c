@@ -1,10 +1,7 @@
 ///////////////////////////////////////////////////////////
 /*
 	File Name:		DieWithMessage.c
-	Instructor:		Prof. Arthur Goldberg
 	Author:			Trevor Hodde
-	UID:			N14361265
-	Department:		Computer Science
 	Note:			This DieWithMessage.c file includes
 					User Error Message Function and
 					System Error Message Function.
