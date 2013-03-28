@@ -1,30 +1,11 @@
-////////////////////////////////////////////////////////////////
-/*
-	File Name:		Server.h
-	Author:			Trevor Hodde
-	Note:			This Server.h file includes
-					HEADER FILES, MACRO, STRUCT DEFINITION,
-					GLOBAL VARIABLE AND FUNCTION DECLARATION.
-*/
-////////////////////////////////////////////////////////////////
+/**
+ *	File Name:	Server.h
+ *	Author:		Trevor Hodde
+ */
 
-///////////////PRECOMPILER///////////////
 #ifndef	SERVER_H_
 #define SERVER_H_
 
-///////////////DEBUG///////////////
-#define DEBUG 1
-#ifdef DEBUG
-	#define DEBUG_PRINT		printf("%s-%s:%d:", __FILE__, __FUNCTION__, __LINE__)
-	#define	DEBUG_START		fputs("/***********DEBUG INFORMATION***********/\n", stdout)
-	#define DEBUG_END		fputs("/******************END******************/\n", stdout)
-#else
-	#define DEBUG_PRINT
-	#define DEBUG_START
-	#define DEBUG_END
-#endif
-
-///////////////HEADER FILES///////////////
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -36,7 +17,6 @@
 #include <netinet/in.h>
 #include <netdb.h>
 
-///////////////MACRO///////////////
 #define	MAX_PENDING		10
 #define	SERVER_RTP_PORT	30000
 #define	FRAME_PERIOD	70000
@@ -46,7 +26,6 @@
 #define	MY_NAME			"Trevor Hodde"
 #define	CRLF			"\r\n"
 
-///////////////CONSTANTS VARIABLES///////////////
 enum	size_constants{			//size constants
 	ONE_SIZE		= 1,
 	NUMBER_SIZE 	= 5,
@@ -82,14 +61,11 @@ enum	rtp_parameters{			//rtp parameters constants
 	PAYLOAD_TYPE	= 0x1a,
 };
 
-///////////////STRUCT DEFINITION///////////////
-/*strcutre of type*/
 typedef unsigned char	u_int8;
 typedef unsigned short	u_int16;
 typedef unsigned int	u_int32;
 typedef short			int16;
 
-/*structure of arguments to pass to client thread*/
 typedef struct _thread_arguments{
 	int		client_socket;						//socket descriptor for client
 }THREAD_ARGUMENTS;
@@ -129,7 +105,6 @@ int			client_rtp_port;					//client rtp port number
 int			client_rtcp_port;					//client rtcp port number
 int			server_rtp_port;					//server rtp port number
 
-///////////////FUNCTION DECLARATION///////////////
 /*ServerUtility.c*/
 void	initServer(int port);
 int 	setupServerTCPSocket(const char *service);
@@ -165,14 +140,6 @@ u_int8	*constructRTPPacket(size_t *length);
 void	catchAlarm(int ignored);
 /*SendUtility.c*/
 void	sendOK(char *url, const char *method, u_int32 cseq, int client_socket);
-void	sendNotModified(char *url, u_int32 cseq, int client_socket);
-void 	sendBadRequest(const char *detail, int client_socket);
-void	sendNotFound(char *url, int client_socket);
-void	sendMethodNotAllowed(const char *method, int client_socket);
-void	sendSessionNotFound(int client_socket);
-void	sendMethodNotValidInThisState(const char *method, int client_socket);
-void	sendUnsupportedTransport(const char *protocol, int client_socket);
-void	sendRTSPVersionNotSupported(const char *version, int client_socket);
 /*FileUtility.c*/
 char	*getFileType(char *url);
 /*TimeUtility.c*/

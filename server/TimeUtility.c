@@ -55,12 +55,6 @@ struct tm *getTimeInGMTFormat(char *url, int signal_value){
 	return gmtime(&t);
 }
 
-/*Convert Time Format to a string
-  Variable Definition:
-  -- gmt_time: tm struct in GMT format
-  -- signal_value: signal that decide which time format to convert
-  Return value: time string in GMT format
-*/
 char *convertTimeFormat(struct tm *gmt_time, int signal_value){
 	char	*gmt_time_string = (char*)malloc(sizeof(char) * (TIME_SIZE + 1));	//time in GMT format string
 
@@ -83,17 +77,10 @@ char *convertTimeFormat(struct tm *gmt_time, int signal_value){
 	return gmt_time_string;
 }
 
-/*Compare the If-Modified-Since field and Last-Modified field Function
-  Variable Definition:
-  -- url: the request url except domain name and port number
-  -- modified_time_string: If-Modified-Since field value
-  Return Value: if If-Modified-Since field equals to Last-Modified field, return 1; else return 0
-*/
 bool compareModifiedTime(char *url, char *modified_time_string){
 	struct tm	*file_modified_time = getTimeInGMTFormat(url, 2);	//tm struct with the file last modified time
-	int			i;													//counter
-	
-	//Test the modified time is equal(three format: RFC 1123, RFC 1036, and ANSI C's format)
+	int			i;
+
 	for (i = 1; i < NUMBER_SIZE; i++){
 		if (strcmp(modified_time_string, convertTimeFormat(file_modified_time, i)) == 0){
 			return true;

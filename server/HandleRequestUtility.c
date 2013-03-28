@@ -1,7 +1,7 @@
-/*
-	File Name:		HandleRequestUtility.c
-	Author:			Trevor Hodde
-*/
+/**
+ *	File Name:	HandleRequestUtility.c
+ *	Author:		Trevor Hodde
+ */
 
 #include "Server.h"
 
@@ -35,13 +35,6 @@ void handleClientRequest(int client_socket){
 	return;
 }
 
-/*Respond Client Request Function
-  Variable Definition:
-  -- request: client request line
-  -- header: client header lines
-  -- client_socket: socket connected to the client
-  Return Value: NULL
-*/
 void respondClientRequest(char *request, RTSP_HEADER *header, int client_socket){
 	char 		method[STRING_SIZE];			//method field: SETUP, PLAY, PAUSE, or TEARDOWN
 	char 		url[STRING_SIZE];				//url field: for example, rtsp://localhost:5678/movie.Mjpeg
@@ -57,8 +50,6 @@ void respondClientRequest(char *request, RTSP_HEADER *header, int client_socket)
 	
 	//Test the client RTSP Request Line
 	if (!syntaxChecking(request, REQUEST_LINE)){
-		//400 Bad Request: the request could not be understood by the server
-		sendBadRequest("Request Line is syntactically incorrect!", client_socket);
 		return;
 	}
 	
@@ -66,83 +57,31 @@ void respondClientRequest(char *request, RTSP_HEADER *header, int client_socket)
 	sscanf(request, "%s%s%s", method, url, version);
 	//Decode the URL(if it has %HEX code)
 	decodeURL(url);
-/*
-	//Test the method
-	if (methodNotAllow(method)){
-		//405 Method Not Allowed: the method field is neither "SETUP", "PLAY", "PAUSE" nor "TEARDOWN"
-		sendMethodNotAllowed(method, client_socket);
-		return;
-	}
-	//Test the Requested URL
-	else if (!syntaxChecking(url, URL_FORMAT)){
-		//400 Bad Request: the request could not be understood by the server
-		sendBadRequest("Requested URL is syntactically incorrect!", client_socket);
-		return;
-	}
-	//Test the RTSP version
-	else if (!syntaxChecking(version, RTSP_VERSION)){
-		//400 Bad Request: the request could not be understood by the server
-		sendBadRequest("RTSP Version is syntactically incorrect!", client_socket);
-		return;
-	}
-	//Test the RTSP version 1.0
-	else if (!syntaxChecking(version, RTSP_VERSION_1)){
-		//505 RTSP Version Not Supported: the requested RTSP protocol version is not supported by server
-		sendRTSPVersionNotSupported(version, client_socket);
-		return;
-	}
-*/
-#ifdef	DEBUG
-	RTSP_HEADER		*debug_header_node;
-
-	DEBUG_START;
-	fputs("RTSP request header lines:\n", stdout);
-	//Output the RTSP request header lines
-	for (debug_header_node = header->next; debug_header_node != NULL; debug_header_node = debug_header_node->next){
-		fputs(debug_header_node->field_name, stdout);
-		fputs(": ", stdout);
-		fputs(debug_header_node->field_value, stdout);
-		fputc('\n', stdout);
-	}
-	DEBUG_END;
-#endif
 
 	//Test the Header Line
 	if (headerLinesIncorrect(header, field_value)){
-		//400 Bad Request: the request could not be understood by the server
-		sendBadRequest(field_value, client_socket);
 		return;
 	}
 	//Test the "CSeq" field
 	else if (fieldNotExist(header, "cseq", field_value)){
-		//400 Bad Request: the request could not be understood by the server
-		sendBadRequest("CSeq field does not exist!", client_socket);
 		return;
 	}
 	//Test the "Session" field
 	else if ((!methodIsSetup(method)) && fieldNotExist(header, "session", field_value)){
-		//400 Bad Request: the request could not be understood by the server
-		sendBadRequest("Session field does not exist!", client_socket);
 		return;
 	}
 	//Test the "Transport" field
 	else if (methodIsSetup(method) && fieldNotExist(header, "transport", field_value)){
-		//400 Bad Request: the request could not be understood by the server
-		sendBadRequest("Transport field does not exist!", client_socket);
 		return;
 	}
 	//Test the "Range" field
 	else if ((!(fieldNotExist(header, "range", field_value)))
 				&& (!syntaxChecking(field_value, RANGE_FORMAT))){
-		//400 Bad Request: the request could not be understood by the server
-		sendBadRequest("Range field value(npt=number[-number]) is syntactically incorrect!", client_socket);
 		return;
 	}
 	//Test the "If-Modified-Since" field
 	else if ((!(fieldNotExist(header, "if-modified-since", field_value)))
 				&& (!syntaxChecking(field_value, TIME_FORMAT))){
-		//400 Bad Request: the request could not be understood by the server
-		sendBadRequest("If-Modified-Since field value(time format) is syntactically incorrect!", client_socket);
 		return;
 	}
 	
@@ -153,20 +92,14 @@ void respondClientRequest(char *request, RTSP_HEADER *header, int client_socket)
 	
 	//Test the requested file on the server
 	if (urlNotExist(url)){
-		//404 Not Found: the requested document does not exist on this server
-		sendNotFound(url, client_socket);
 		return;
 	}
 	//Test the requested url is a directory
 	else if (urlIsADirectory(url)){
-		//404 Not Found: the requested document does not exist on this server
-		sendNotFound(url, client_socket);
 		return;
 	}
 	//Test the method is valid in special state
 	else if (methodIsNotValidInState(method)){
-		//455 Method is not valid in this state: the method is not valid in this state
-		sendMethodNotValidInThisState(method, client_socket);
 		return;
 	}
 
@@ -175,26 +108,19 @@ void respondClientRequest(char *request, RTSP_HEADER *header, int client_socket)
 
 	//Test the "Session" field's value
 	if (cseq_number == 0){
-		//454 Session Not Found: the session id is not equal to the server's
-		sendSessionNotFound(client_socket);
 		return;
 	}
 	//Test the protocol type
 	else if (strcmp(protocol_type, PROTOCOL_TYPE) != 0){
-		//461 Unsupported Transport: the transport protocol is not supported by the server
-		sendUnsupportedTransport(protocol_type, client_socket);
 		return; 
 	}
 	//Test the "If-Modified-Since" field
 	else if (fieldNotExist(header, "if-modified-since", field_value)){
-		//200 OK: the request is good
 		sendOK(url, method, cseq_number, client_socket);
 		return;
 	}
 	//Test the "If-Modified-Since" field value
 	else if (compareModifiedTime(url, field_value)){
-		//304 Not Modified: the request does not Modified since If-Modified-Since field
-		sendNotModified(url, cseq_number, client_socket);
 		return;
 	}
 	else{

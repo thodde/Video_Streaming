@@ -1,17 +1,11 @@
-/////////////////////////////////////////////////////////////////
 /*
 	File Name:		RTPPacketUtility.c
 	Author:			Trevor Hodde
-	Note:			This RTPPacketUtility.c file includes 
-					Handle RTP Packets Function.
 */
-/////////////////////////////////////////////////////////////////
 
-///////////////HEADER FILES///////////////
 #include <time.h>
 #include "Server.h"
 
-///////////////GLOBAL VARIABLES///////////////
 static struct itimerval		rtp_timer;			//rtp packet timer
 static char			*video_file_name;			//video file name
 static long			next_frame_start = 0;		//next frame start number
@@ -19,7 +13,6 @@ static u_int16		frame_number = 0;			//sequence number
 static u_int32		frame_total = 0;			//total frame number
 static u_int32		ssrc = 0;					//rtp ssrc field
 
-///////////////FUNCTIONS///////////////
 /*Get Video Information Function
   Variable Definition:
   -- url: the request url except domain name and port number
@@ -66,47 +59,29 @@ u_int32 getVideoInfo(char *url){
 	return count;
 }
 
-/*Start RTP Progress Function
-  Variable Definition:
-  -- NULL
-  Return Value: NULL
-*/
 void startRTPProgress(){
 	//Set the timer
 	setTimer(rtp_timer, ITIMER_REAL, 0, FRAME_PERIOD, 0, FRAME_PERIOD);
-
 	return;
 }
 
-/*Stop RTP Progress Function
-  Variable Definition:
-  -- NULL
-  Return Value: NULL
-*/
 void stopRTPProgress(){
-	//Clear the timer
 	setTimer(rtp_timer, ITIMER_REAL, 0, 0, 0, 0);
-
 	return;
 }
 
-/*Close Video Stream Function
-  Variable Definition:
-  -- NULL
-  Return Value: NULL
-*/
 void closeVideoStream(){
 	//Test the server status
-	if (status == PLAYING){
+	if (status == PLAYING) {
 		stopRTPProgress();
 	}
+
 	//Initialize RTP packet variables
 	video_file_name = NULL;
 	next_frame_start = 0;
 	frame_number = 0;
 	frame_total = 0;
 	ssrc = 0;
-	//Initialize the server variables
 	initServer(SERVER_RTP_PORT);
 
 	return;
