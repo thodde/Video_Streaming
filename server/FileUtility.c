@@ -1,25 +1,14 @@
-////////////////////////////////////////////////////////////
-/*
-	File Name:		FileUtility.c
-	Author:			Trevor Hodde
-	Note:			This FileUtility.c file includes 
-					Handle Server File Functions.
-*/
-////////////////////////////////////////////////////////////
+/**
+ *	File Name:	FileUtility.c
+ *	Author:		Trevor Hodde
+ */
 
-///////////////HEADER FILES///////////////
 #include "Server.h"
 
-///////////////FUNCTIONS///////////////
-/*Get File Type Function
-  Variable Definition:
-  -- url: the request url except domain name and port number
-  Return Value: pointer to the file extension type
-*/
 char *getFileType(char *url){
-	char *extension = NULL;		//file extension
+	char *extension = NULL;
 	
-	//Get the file extension type by '.' character
+	//Get the file extension type using the '.' character
 	if ((extension = strrchr(url, '.')) != NULL){
 		//Jump the '.' character
 		return (extension + 1);
