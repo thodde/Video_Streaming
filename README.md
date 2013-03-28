@@ -17,10 +17,13 @@ Prerequisites:
 
 Running the Program:
 --------------------
-1. To compile this program, type "make" at the top level directory. This will compile both the client and the server. 
-  You can also choose to "make clean" in case of any unexpected errors or changes.
+1. To compile the project, just run the following steps:
+	cd server
+	make
+	cd ../client
+	make 
 
-  Another option is to compile the client or server separately. To do so, just cd in either directory and type "make"
+	You can also choose to "make clean" in case of any unexpected errors or changes.
 
 2. To run the video server, you must provide a valid port number.
 	Example: ./VideoServer 5000
