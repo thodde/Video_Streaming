@@ -155,14 +155,7 @@ void	menuCallback(	gpointer	callback_data,
 void	setupRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data);
 void	playRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data);
 void	teardownRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data);
-void	showToolbar(	gpointer	callback_data,
-						guint		callback_action,
-						GtkWidget	*menu_item);
-void	showAboutCallback(GtkWidget *widget, gpointer data);
-void	showInfoCallback(GtkWidget *widget, gpointer data);
 void	showErrorCallback(GtkWidget *widget, gpointer data);
-void	showQuesCallback(GtkWidget *widget, gpointer data);
-void	showWarnCallback(GtkWidget *widget, gpointer data);
 void	enterButtonCallback(GtkWidget *widget, gpointer data);
 /*StringUtility.c*/
 char	*itoa(int number);

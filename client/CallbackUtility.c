@@ -1,14 +1,14 @@
-/*
-	File Name:		CallbackUtility.c
-	Author:			Trevor Hodde
-*/
+/**
+ * File Name: CallbackUtility.c
+ * Author:    Trevor Hodde
+ */
 
 #include "Client.h"
 
-static CLIENT_DATA	*client;		//_client_data structure node
+static CLIENT_DATA *client;
 
 void initCallback(CLIENT_DATA *client_data){
-	GtkToolItem		*tool_item;		//tool item widget
+	GtkToolItem	*tool_item;
 
 	//Set a handler for enter that change the button's background color
 	g_signal_connect(setupButton, "enter", G_CALLBACK(enterButtonCallback), NULL);
@@ -111,8 +111,6 @@ void setupRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data){
 		status = READY;
 		//Set the buttons', toolbars', and menus' sensitive property
 		setSensitive(FALSE, TRUE, TRUE);
-		//Show the setup complete window
-		showInfoCallback(client_data->window, "Setup complete!");
 	}
 	//Close client socket
 	close(client_socket);
@@ -184,12 +182,6 @@ void playRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data){
 	return;
 }
 
-/*TEARDOWN method Callback Function
-  Variable Definition:
-  -- widget: callback function widget
-  -- client_data: callback function widget
-  Return Value: NULL
-*/
 void teardownRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data){
 	gchar		*buffer;					//request message buffer
 	gint		client_socket = -1;			//socket descriptor for client
@@ -248,93 +240,6 @@ void teardownRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data){
 	return;
 }
 
-/*Show or Hide Toolbar Callback Function
-  Variable Definition:
-  -- callback_data: callback function data
-  -- callback_action: callback function action
-  -- menu_item: callback function widget
-  Return Value: NULL
-*/
-void showToolbar(gpointer callback_data, guint callback_action, GtkWidget *menu_item){
-	//Test the check menu item status
-	if (gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(menu_item))){
-		//Show the toolbar
-		gtk_widget_show(toolbar);
-	}
-	else{
-		//Hide the toolbar
-		gtk_widget_hide(toolbar);
-	}
-
-	return;
-}
-
-/*Show About Callback Function
-  Variable Definition:
-  -- widget: callback function widget
-  -- data: callback function data
-  Return Value: NULL
-*/
-void showAboutCallback(GtkWidget *widget, gpointer data){
-	GtkWidget	*dialog;		//dialog widget
-	GdkPixbuf	*pixbuf;		//pixbuf widget
-
-	//Create the pixbuf
-	pixbuf = getIcon(VIDEO_ICON);
-
-	//Create the dialog
-	dialog = gtk_about_dialog_new();
-	//Set the name of dialog
-	gtk_about_dialog_set_name(GTK_ABOUT_DIALOG(dialog), WINDOW_TITLE);
-	//Set the comment of dialog
-	gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(dialog), "Streaming Video Player is a simple media player using RTSP & RTP protocols");
-	//Set the logo of dialog
-	gtk_about_dialog_set_logo(GTK_ABOUT_DIALOG(dialog), pixbuf);
-
-	//Unreference the pixbuf
-	g_object_unref(pixbuf);
-	//Set the pixbuf's value
-	pixbuf = NULL;
-
-	//Run the about dialog
-	gtk_dialog_run(GTK_DIALOG(dialog));
-	//Destroy the about dialog
-	gtk_widget_destroy(dialog);
-
-	return;
-}
-
-/*Show Information Message Dialog Callback Function
-  Variable Definition:
-  -- widget: callback function widget
-  -- data: callback function data
-  Return Value: NULL
-*/
-void showInfoCallback(GtkWidget *widget, gpointer data){
-	GtkWidget	*dialog;		//dialog widget
-
-	//Create a information dialog
-	dialog = gtk_message_dialog_new(GTK_WINDOW(widget),
-									GTK_DIALOG_DESTROY_WITH_PARENT,
-									GTK_MESSAGE_INFO,
-									GTK_BUTTONS_OK,
-									"%s", (gchar*)data);
-	//Set the title of dialog
-	gtk_window_set_title(GTK_WINDOW(dialog), "Information");
-	//Run the message dialog
-	gtk_dialog_run(GTK_DIALOG(dialog));
-	//Destroy the message dialog
-	gtk_widget_destroy(dialog);
-
-	return;
-}
-
-/*Show Error Message Dialog Callback Function
-  Variable Definition:
-  -- widget: callback function widget
-  -- data: callback function data
-  Return Value: NULL
-*/
 void showErrorCallback(GtkWidget *widget, gpointer data){
 	GtkWidget	*dialog;		//dialog widget
 
@@ -354,62 +259,6 @@ void showErrorCallback(GtkWidget *widget, gpointer data){
 	return;
 }
 
-/*Show Question Message Dialog Callback Function
-  Variable Definition:
-  -- widget: callback function widget
-  -- data: callback function data
-  Return Value: NULL
-*/
-void showQuesCallback(GtkWidget *widget, gpointer data){
-	GtkWidget	*dialog;		//dialog widget
-
-	//Create a question dialog
-	dialog = gtk_message_dialog_new(GTK_WINDOW(widget),
-									GTK_DIALOG_DESTROY_WITH_PARENT,
-									GTK_MESSAGE_QUESTION,
-									GTK_BUTTONS_YES_NO,
-									"%s", (gchar*)data);
-	//Set the title of dialog
-	gtk_window_set_title(GTK_WINDOW(dialog), "Question");
-	//Run the message dialog
-	gtk_dialog_run(GTK_DIALOG(dialog));
-	//Destroy the message dialog
-	gtk_widget_destroy(dialog);
-
-	return;
-}
-
-/*Show Warning Message Dialog Callback Function
-  Variable Definition:
-  -- widget: callback function widget
-  -- data: callback function data
-  Return Value: NULL
-*/
-void showWarnCallback(GtkWidget *widget, gpointer data){
-	GtkWidget	*dialog;		//dialog widget
-
-	//Create a information dialog
-	dialog = gtk_message_dialog_new(GTK_WINDOW(widget),
-									GTK_DIALOG_DESTROY_WITH_PARENT,
-									GTK_MESSAGE_WARNING,
-									GTK_BUTTONS_OK,
-									"%s", (gchar*)data);
-	//Set the title of dialog
-	gtk_window_set_title(GTK_WINDOW(dialog), "Warning");
-	//Run the message dialog
-	gtk_dialog_run(GTK_DIALOG(dialog));
-	//Destroy the message dialog
-	gtk_widget_destroy(dialog);
-
-	return;
-}
-
-/*Enter Button Callback Callback Function
-  Variable Definition:
-  -- widget: callback function widget
-  -- data: callback function data
-  Return Value: NULL
-*/
 void enterButtonCallback(GtkWidget *widget, gpointer data){
 	GdkColor	color;		//button color
 

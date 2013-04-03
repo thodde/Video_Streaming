@@ -13,9 +13,7 @@ static GtkItemFactoryEntry		menu_items[] = {							//item factory entry array
 	{"/Media/sep1",				NULL,			NULL,					0,			"<Separator>"							},
 	{"/_View",					NULL,			NULL,					0,			"<Branch>"								},
 	{"/View/tear",				NULL,			NULL,					0,			"<Tearoff>"								},
-	{"/View/Toolbar",			NULL,			showToolbar,			1,			"<CheckItem>"							},
-	{"/_Help",					NULL,			NULL,					0,			"<LastBranch>"							},
-	{"/_Help/About...",			NULL,			showAboutCallback,		0,			"<StockItem>",	GTK_STOCK_ABOUT			},
+	{"/_Help",					NULL,			NULL,					0,			"<LastBranch>"							}
 };
 static gint		nmenu_items = sizeof(menu_items) / sizeof(menu_items[0]);	//number of item factory entry
 static GtkItemFactory	*item_factory;										//item factory widget
@@ -100,11 +98,6 @@ GtkWidget *getMenubarMenu(GtkWidget *window){
 	return gtk_item_factory_get_widget(item_factory, "<main>");
 }
 
-/*Generate Toolbar Widget Function
-  Variable Definition:
-  -- NULL
-  Return Value: toolbar widget
-*/
 GtkWidget *getToolbar(){
 	GtkToolItem		*tool_item;		//tool item widget
 	GtkTooltips		*tooltip;		//tooltip widget
