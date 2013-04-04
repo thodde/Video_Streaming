@@ -1,6 +1,8 @@
 /**
  * File Name: RTPPacketUtility.c
  * Author:    Trevor Hodde
+ * Borrowed a little of the RTP code from:
+ * lumisoft.ee/lswww/download/downloads/Examples 
  */
 
 #include <fcntl.h>
@@ -12,7 +14,7 @@ static int rtp_client = -1;	  //udp client socket
 static u_int16	frame_number = 0; //sequence number
 static u_int32	ssrc = 0;	  //ssrc number
 
-void startRTPProgress(CLIENT_DATA *client_data){
+void startRTPProgress(CLIENT_DATA *client_data) {
 	struct sigaction handler;	//sigaction structure
 	u_int32	rcvd_buffer_size = 50 * BUFFER_SIZE;	//received buffer size
 
@@ -62,6 +64,7 @@ void stopRTPProgress(u_int32 status_signal) {
 	if (rtp_client != -1) {
 		close(rtp_client);
 	}
+
 	//Initialize udp client socket
 	rtp_client = -1;
 	switch (status_signal) {
@@ -107,25 +110,26 @@ bool checkRTPHeader(const u_int8 *rtp) {
 }
 
 void SIGIOHandler(int signal){
-	u_int8		*buffer;				//datagram buffer
-	ssize_t		number_bytes_rcvd;		//size of received message
+	u_int8		*buffer;
+	ssize_t		number_bytes_rcvd;
 
 	//Allocate memory for buffer
 	buffer = (u_int8*)malloc(sizeof(u_int8) * FRAME_SIZE);
 	//As long as there is input...
 	do {
-		struct sockaddr_storage	server_address;				//server address
-		socklen_t				server_address_length;		//length of server address structure
+		struct sockaddr_storage	server_address;	
+		socklen_t	server_address_length;
 
 		//Set length of server address structure
 		server_address_length = sizeof(server_address);
 		//Block until receive message from a server
 		number_bytes_rcvd = recvfrom(	rtp_client,
-										buffer,
-										FRAME_SIZE,
-										0,
-										(struct sockaddr*)&server_address,
-										&server_address_length);
+						buffer,
+						FRAME_SIZE,
+						0,
+						(struct sockaddr*)&server_address,
+						&server_address_length);
+
 		if (number_bytes_rcvd < 0) {
 			//Only acceptable error: recvfrom() would have blocked
 			if (errno != EWOULDBLOCK) {
@@ -134,19 +138,20 @@ void SIGIOHandler(int signal){
 			}
 		}
 		else {
-			//Now, client has received server message
 			//Check the RTP packet header
 			if (checkRTPHeader(buffer)) {
 				//Set the new image on the image widget
 				setImage(buffer);
 			}
-			//Output the server address and port
-			fputs("Receive RTP packet from ", stdout);
+
+			//print the server address and port
+			fputs("Received RTP packet from ", stdout);
 			printSocketAddress((struct sockaddr*)&server_address, stdout);
-			//Output the frame number
+			//print the frame number
 			printf(", frame number: #%u\n", frame_number);
 		}
 	} while (number_bytes_rcvd >= 0);
+
 	//Nothing left to receive
 	return;
 }

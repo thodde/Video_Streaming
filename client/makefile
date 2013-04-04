@@ -1,4 +1,3 @@
-# Variable Definition
 OBJS = MainFunction.o ClientUtility.o HandleUtility.o RTPPacketUtility.o LayoutUtility.o CallbackUtility.o 
 CC = gcc
 CFLAGS = -Wall -O -g
@@ -19,6 +18,5 @@ $(TARGET) : $(OBJS)
 	$(CC) $(OBJS) -o $(TARGET) $(PKGCON)
 	chmod a+x $(TARGET)
 
-# make clean command to delete all .o files and .exe file
 clean:
 	rm -rf *.o VideoClient
