@@ -7,12 +7,6 @@
 
 static GtkItemFactoryEntry		menu_items[] = {							//item factory entry array
 	{"/_Media",					NULL,			NULL,					0,			"<Branch>"								},
-	{"/Media/_Setup",			"<control>S",	menuCallback,			SETUP,		"<StockItem>",	GTK_STOCK_NETWORK		},
-	{"/Media/_Play",			"<control>P",	menuCallback,			PLAY,		"<StockItem>",	GTK_STOCK_MEDIA_PLAY	},
-	{"/Media/_Teardown",		"<control>T",	menuCallback,			TEARDOWN,	"<StockItem>",	GTK_STOCK_MEDIA_STOP	},
-	{"/Media/sep1",				NULL,			NULL,					0,			"<Separator>"							},
-	{"/_View",					NULL,			NULL,					0,			"<Branch>"								},
-	{"/View/tear",				NULL,			NULL,					0,			"<Tearoff>"								},
 	{"/_Help",					NULL,			NULL,					0,			"<LastBranch>"							}
 };
 static gint		nmenu_items = sizeof(menu_items) / sizeof(menu_items[0]);	//number of item factory entry
@@ -204,16 +198,8 @@ GtkWidget *getButton(	GtkWidget *box,
 void setSensitive(	gboolean setup_s,
 					gboolean play_s,
 					gboolean teardown_s){
-	GtkWidget		*menu_item;		//menu item widget
 	GtkToolItem		*tool_item;		//tool item widget
 
-	//Set the sensitive property of menu items
-	menu_item = gtk_item_factory_get_widget(item_factory, "/Media/Setup");
-	gtk_widget_set_sensitive(menu_item, setup_s);
-	menu_item = gtk_item_factory_get_widget(item_factory, "/Media/Play");
-	gtk_widget_set_sensitive(menu_item, play_s);
-	menu_item = gtk_item_factory_get_widget(item_factory, "/Media/Teardown");
-	gtk_widget_set_sensitive(menu_item, teardown_s);
 	//Set the sensitive property of buttons
 	gtk_widget_set_sensitive(setupButton, setup_s);
 	gtk_widget_set_sensitive(playButton, play_s);
