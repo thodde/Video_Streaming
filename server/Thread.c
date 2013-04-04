@@ -1,15 +1,15 @@
 /**
- *	File Name:		Thread.c
- *	Author:			Trevor Hodde
- *	This code was borrowed from PThreads Programming
- *	By Bradford Nichols
+ * File Name: Thread.c
+ * Author:    Trevor Hodde
+ * This code was borrowed from PThreads Programming
+ * By Bradford Nichols
  */
 
 #include <pthread.h>
 #include "Server.h"
 
 void *threadMain(void *thread_arguments){
-	int		client_socket;		//socket descriptor for client
+	int client_socket;
 	
 	//Make sure the thread is killed when it completes
 	pthread_detach(pthread_self());
