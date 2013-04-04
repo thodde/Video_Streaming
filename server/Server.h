@@ -17,21 +17,21 @@
 #include <netinet/in.h>
 #include <netdb.h>
 
-#define	MAX_PENDING		10
+#define	MAX_PENDING	10
 #define	SERVER_RTP_PORT	30000
 #define	FRAME_PERIOD	70000
 #define	BASIC_NUMBER	10000000
-#define	MOD_NUMBER		89999999
+#define	MOD_NUMBER	89999999
 #define	PROTOCOL_TYPE	"rtp/udp"
-#define	MY_NAME			"Trevor Hodde"
-#define	CRLF			"\r\n"
+#define	MY_NAME		"Trevor Hodde"
+#define	CRLF		"\r\n"
 
 enum	size_constants{			//size constants
-	ONE_SIZE		= 1,
+	ONE_SIZE	= 1,
 	NUMBER_SIZE 	= 5,
 	RTP_HEAD_SIZE	= 12,
-	NAME_SIZE 		= 16,
-	TIME_SIZE 		= 32,
+	NAME_SIZE 	= 16,
+	TIME_SIZE 	= 32,
 	HALFSTR_SIZE 	= 64,
 	STRING_SIZE 	= 128,
 	HALFBUF_SIZE 	= 512,
@@ -54,83 +54,82 @@ enum	status_constants{		//rtsp server status constants
 };
 enum	rtp_parameters{			//rtp parameters constants
 	RTP_VERSION 	= 0x80,
-	PADDING			= 0x00,
-	EXTENSION		= 0x00,
-	CSRC_COUNT		= 0x00,
-	MARKER			= 0x00,
+	PADDING		= 0x00,
+	EXTENSION	= 0x00,
+	CSRC_COUNT	= 0x00,
+	MARKER		= 0x00,
 	PAYLOAD_TYPE	= 0x1a,
 };
 
 typedef unsigned char	u_int8;
 typedef unsigned short	u_int16;
 typedef unsigned int	u_int32;
-typedef short			int16;
+typedef short		int16;
 
 typedef struct _thread_arguments{
-	int		client_socket;						//socket descriptor for client
+	int	client_socket;	
 }THREAD_ARGUMENTS;
 
 /*structure of udp socket information*/
 typedef struct _udp_socket_info{
-	int					socket;					//udp socket descriptor for server
-	struct addrinfo		*address;				//socket address
+	int	socket;	
+	struct addrinfo	*address;
 }UDP_SOCKET_INFO;
 
 /*structure of rtsp request header message*/
 typedef struct _rtsp_header{
-	char	header_line[HALFBUF_SIZE];			//header line
-	char	field_name[HALFSTR_SIZE];			//field name
-	char	field_value[HALFBUF_SIZE];			//field value
-	struct _rtsp_header *next;					//next pointer
+	char	header_line[HALFBUF_SIZE];	//header line
+	char	field_name[HALFSTR_SIZE];	//field name
+	char	field_value[HALFBUF_SIZE];	//field value
+	struct _rtsp_header *next;		//next pointer
 }RTSP_HEADER;
 
 /*structure of rtp packet header*/
 typedef struct _rtp_header{
-	u_int8		vpxcc;							//rtp parameter: version, padding, extension, and csrc count
-	u_int8		mpt;							//rtp parameter: marker, payload type
-	u_int16		seq_number;						//sequence number field
-	u_int32		timestamp;						//timestamp field
-	u_int32		ssrc;							//ssrc field
+	u_int8		vpxcc;		
+	u_int8		mpt;	
+	u_int16		seq_number;
+	u_int32		timestamp;
+	u_int32		ssrc;	
 }RTP_HEADER;
 
-///////////////GLOBAL VARIABLES///////////////
-char		protocol_type[NAME_SIZE];			//client protocol type: rtp/udp
-char		protocol_method[NAME_SIZE];			//client protocol method: compression
-char		rtp_address[INET6_ADDRSTRLEN];		//client rtp address
-u_int32		session_id;							//server session id: eight digits
-u_int32		status;								//server status
-u_int32		range_start;						//range start number
-int			range_end;							//range end number
-int			client_rtp_port;					//client rtp port number
-int			client_rtcp_port;					//client rtcp port number
-int			server_rtp_port;					//server rtp port number
+char		protocol_type[NAME_SIZE];	//client protocol type: rtp/udp
+char		protocol_method[NAME_SIZE];	//client protocol method: compression
+char		rtp_address[INET6_ADDRSTRLEN];	//client rtp address
+u_int32		session_id;		
+u_int32		status;		
+u_int32		range_start;
+int		range_end;
+int		client_rtp_port;
+int		client_rtcp_port;
+int		server_rtp_port;
 
-/*ServerUtility.c*/
+//ServerUtility.c
 void	initServer(int port);
 int 	setupServerTCPSocket(const char *service);
-UDP_SOCKET_INFO		*setupServerUDPSocket(const char *host, const char *service);
+UDP_SOCKET_INFO	*setupServerUDPSocket(const char *host, const char *service);
 int 	acceptTCPConnection(int server_socket);
-/*AddressUtility.c*/
+
+//AddressUtility.c
 void 	printSocketAddress(const struct sockaddr *address, FILE *stream, bool get_address_signal);
-/*Thread.c*/
+//Thread.c
 void	*threadMain(void *thread_arguments);
-/*HandleRequestUtility.c*/
+//HandleRequestUtility.c
 void 	handleClientRequest(int client_socket);
 void 	respondClientRequest(char *request, RTSP_HEADER *header, int client_socket);
-int		constructResponseMessage(	int				client_socket,
-									FILE			**stream,
-									int				status_code,
-									const char		*status_message,
-									u_int32			cseq_number,
-									const char		*transport,
-									const char		*last_modified_time,
-									int				content_length,
-									const char		*content_type,
-									const char		*content);
-RTSP_HEADER		*getHeaderLines(FILE *stream);
+int	constructResponseMessage(int client_socket, FILE **stream, int status_code,
+				const char *status_message,
+				u_int32	cseq_number,
+				const char *transport,
+				const char *last_modified_time,
+				int content_length,
+				const char *content_type,
+				const char *content);
+RTSP_HEADER *getHeaderLines(FILE *stream);
 u_int32	getRTSPInfo(RTSP_HEADER *header);
 u_int32	getRandomNumber(int bas_number, u_int32 mod_number);
-/*RTPPacketUtility.c*/
+
+//RTPPacketUtility.c
 u_int32	getVideoInfo(char *url);
 void	startRTPProgress();
 void	stopRTPProgress();
@@ -138,19 +137,17 @@ void	closeVideoStream();
 void	setRTPPacketHeader(RTP_HEADER *rtp);
 u_int8	*constructRTPPacket(size_t *length);
 void	catchAlarm(int ignored);
-/*SendUtility.c*/
+
+//SendUtility.c
 void	sendOK(char *url, const char *method, u_int32 cseq, int client_socket);
-/*TimeUtility.c*/
-void	setTimer(	struct itimerval	timer,
-					int					type,
-					u_int32				interval_sec,
-					u_int32				interval_usec,
-					u_int32				value_sec,
-					u_int32				value_usec);
-struct tm	*getTimeInGMTFormat(char *url, int signal_value);
+//TimeUtility.c
+void	setTimer(struct itimerval timer, int type, u_int32 interval_sec,
+		u_int32 interval_usec, u_int32 value_sec,
+		u_int32	value_usec);
+struct tm *getTimeInGMTFormat(char *url, int signal_value);
 char	*convertTimeFormat(struct tm *gmt_time, int signal_value);
 bool	compareModifiedTime(char *url, char *modified_time_string);
-/*StringUtility.c*/
+//StringUtility.c
 char 	*itoa(int number);
 void	decodeURL(char *url);
 void	pathBelowCurrentDirectory(char *url);
@@ -166,4 +163,4 @@ bool	methodIsNotValidInState(const char *method);
 bool	syntaxChecking(char *string, int signal_value);
 char	*splitNameAndValue(char *header_line, const char stop);
 
-#endif //SERVER_H
+#endif 
