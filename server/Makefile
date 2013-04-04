@@ -1,5 +1,4 @@
-# Variable Definition
-OBJS = MainFunction.o Thread.o ServerUtility.o AddressUtility.o HandleRequestUtility.o RTPPacketUtility.o SendUtility.o FileUtility.o TimeUtility.o StringUtility.o 
+OBJS = MainFunction.o Thread.o ServerUtility.o AddressUtility.o HandleRequestUtility.o RTPPacketUtility.o SendUtility.o TimeUtility.o StringUtility.o 
 LIBS = -lpthread
 CC = gcc
 CFLAGS = -Wall -O -g
@@ -19,6 +18,5 @@ $(TARGET) : $(OBJS)
 	$(CC) $(OBJS) -o $(TARGET) $(LIBS)
 	chmod a+x $(TARGET)
 
-# make clean command to delete all .o files and .exe file
 clean:
 	rm -rf *.o VideoServer
