@@ -12,12 +12,6 @@ static GtkItemFactoryEntry		menu_items[] = {							//item factory entry array
 static gint		nmenu_items = sizeof(menu_items) / sizeof(menu_items[0]);	//number of item factory entry
 static GtkItemFactory	*item_factory;										//item factory widget
 
-///////////////FUNCTIONS///////////////
-/*Initialize Client Layout Function
-  Variable Definition:
-  -- window: gtk main window
-  Return Value: NULL
-*/
 void initClientLayout(GtkWidget *window){
 	GtkWidget	*menubar;			//menubar widget
 	GtkWidget	*main_vbox;			//main vertical box widget	
@@ -138,14 +132,7 @@ GtkWidget *getToolbar(){
 	return toolbar;
 }
 
-/*Generate Button Widget Function
-  Variable Definition:
-  -- box: box widget pointer
-  -- icon_name: stock icon name
-  -- label_string: button label
-  -- tooltip_label: button tooltip label
-  Return Value: button widget
-*/
+
 GtkWidget *getButton(	GtkWidget *box,
 						const gchar *icon_name,
 						const gchar *label_string,

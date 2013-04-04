@@ -1,7 +1,9 @@
-/*
-	File Name:		Client.h
-	Author:			Trevor Hodde
-*/
+/**
+ * File Name: Client.h
+ * Author:    Trevor Hodde
+ * GTK Code borrowed from the GTK website tutorials and
+ * gstreamer tutorials.
+ */
 
 #ifndef	CLIENT_H_
 #define CLIENT_H_
@@ -74,8 +76,6 @@ enum	rtp_parameters{			//rtp parameters constants
 	PAYLOAD_TYPE_MASK	= 0x7f,
 };
 
-///////////////STRUCT DEFINITION///////////////
-/*strcutre of type*/
 typedef unsigned char	u_int8;
 typedef unsigned short	u_int16;
 typedef unsigned int	u_int32;
@@ -105,7 +105,6 @@ typedef struct _rtp_header{
 	u_int32		ssrc;						//ssrc field
 }RTP_HEADER;
 
-///////////////GLOBAL VARIABLE///////////////
 GtkWidget	*toolbar;			//toolbar widget
 GtkWidget	*image;				//image widget
 GtkWidget	*setupButton;		//setup button widget
@@ -118,7 +117,6 @@ int			client_rtp_port;	//client rtp port number
 int			client_rtcp_port;	//client rtcp port number
 int			server_rtp_port;	//server rtp port number
 
-///////////////FUNCTION DECLARATION///////////////
 /*ClientUtility.c*/
 void	initClient(int port);
 int		setupClientTCPSocket(const char *host, const char *service);
