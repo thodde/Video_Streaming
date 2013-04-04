@@ -1,13 +1,15 @@
 /**
  * File Name: CallbackUtility.c
  * Author:    Trevor Hodde
+ * The GTK code for the video GUI was borrowed from
+ * http://docs.gstreamer.com/display/GstSDK/GStreamer+reference
  */
 
 #include "Client.h"
 
 static CLIENT_DATA *client;
 
-void initCallback(CLIENT_DATA *client_data){
+void initCallback(CLIENT_DATA *client_data) {
 	GtkToolItem	*tool_item;
 
 	//Set a handler for enter that change the button's background color
@@ -36,7 +38,7 @@ void initCallback(CLIENT_DATA *client_data){
 
 void menuCallback(gpointer callback_data, guint callback_action, GtkWidget *menu_item){
 	//According to the callback_action, call the special function
-	switch (callback_action){
+	switch (callback_action) {
 		case SETUP:
 			//SETUP callback function
 			setupRTSPCallback(menu_item, client);
@@ -56,18 +58,19 @@ void menuCallback(gpointer callback_data, guint callback_action, GtkWidget *menu
 	return;
 }
 
-void setupRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data){
-	gchar		*buffer;					//request message buffer
-	gint		client_socket = -1;			//socket descriptor for client
-	gint		bytes = 0;					//number of bytes
-	size_t		message_length;				//request message length
+void setupRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data) {
+	gchar		*buffer;
+	gint		client_socket = -1;
+	gint		bytes = 0;	
+	size_t		message_length;	
 
 	//Create a connected TCP socket
 	client_socket = setupClientTCPSocket(client_data->host, client_data->service);
-	if (client_socket < 0){
+	if (client_socket < 0) {
 		showErrorCallback(client_data->window, "setupClientSocket() failed: unable to connect!");
 		return;
 	}
+
 	//Initialize request message buffer
 	buffer = g_malloc(sizeof(gchar) * (BUFFER_SIZE));
 	//Increase the cseq number
@@ -89,18 +92,18 @@ void setupRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data){
 	//Send SETUP request message to the server
 	bytes = send(client_socket, buffer, message_length, MSG_NOSIGNAL);
 	//Test the send is successful
-	if (bytes < 0){
+	if (bytes < 0) {
 		showErrorCallback(client_data->window, "send() failed");
 		return;
 	}
-	else if (bytes != message_length){
+	else if (bytes != message_length) {
 		showErrorCallback(client_data->window, "send() error: sent unexpected number of bytes!");
 		return;
 	}
 
 	//Now, start receiving the RTSP response message
 	//Handle RTSP server response message
-	if (handleServerResponse(client_data->window, client_socket)){
+	if (handleServerResponse(client_data->window, client_socket)) {
 		//Set the client status
 		status = READY;
 		//Set the buttons', toolbars', and menus' sensitive property
@@ -112,21 +115,15 @@ void setupRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data){
 	return;
 }
 
-/*PLAY method Callback Function
-  Variable Definition:
-  -- widget: callback function widget
-  -- client_data: callback function widget
-  Return Value: NULL
-*/
-void playRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data){
-	gchar		*buffer;					//request message buffer
-	gint		client_socket = -1;			//socket descriptor for client
-	gint		bytes = 0;					//number of bytes
-	size_t		message_length;				//request message length
+void playRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data) {
+	gchar		*buffer;
+	gint		client_socket = -1;
+	gint		bytes = 0;	
+	size_t		message_length;	
 
 	//Create a connected TCP socket
 	client_socket = setupClientTCPSocket(client_data->host, client_data->service);
-	if (client_socket < 0){
+	if (client_socket < 0) {
 		showErrorCallback(client_data->window, "setupClientSocket() failed: unable to connect!");
 		return;
 	}
@@ -150,18 +147,18 @@ void playRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data){
 	//Send PLAY request message to the server
 	bytes = send(client_socket, buffer, message_length, MSG_NOSIGNAL);
 	//Test the send is successful
-	if (bytes < 0){
+	if (bytes < 0) {
 		showErrorCallback(client_data->window, "send() failed");
 		return;
 	}
-	else if (bytes != message_length){
+	else if (bytes != message_length) {
 		showErrorCallback(client_data->window, "send() error: sent unexpected number of bytes!");
 		return;
 	}
 
 	//Now, start receiving the RTSP response message
 	//Handle Server Response Message
-	if (handleServerResponse(client_data->window, client_socket)){
+	if (handleServerResponse(client_data->window, client_socket)) {
 		//Set the client status
 		status = PLAYING;
 		//Set the buttons', toolbars' and menus' sensitive property
@@ -176,15 +173,15 @@ void playRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data){
 	return;
 }
 
-void teardownRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data){
-	gchar		*buffer;					//request message buffer
-	gint		client_socket = -1;			//socket descriptor for client
-	gint		bytes = 0;					//number of bytes
-	size_t		message_length;				//request message length
+void teardownRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data) {
+	gchar		*buffer;
+	gint		client_socket = -1;
+	gint		bytes = 0;	
+	size_t		message_length;	
 
 	//Create a connected TCP socket
 	client_socket = setupClientTCPSocket(client_data->host, client_data->service);
-	if (client_socket < 0){
+	if (client_socket < 0) {
 		showErrorCallback(client_data->window, "setupClientSocket() failed: unable to connect!");
 		return;
 	}
@@ -208,18 +205,18 @@ void teardownRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data){
 	//Send TEARDOWN request message to the server
 	bytes = send(client_socket, buffer, message_length, MSG_NOSIGNAL);
 	//Test the send is successful
-	if (bytes < 0){
+	if (bytes < 0) {
 		showErrorCallback(client_data->window, "send() failed");
 		return;
 	}
-	else if (bytes != message_length){
+	else if (bytes != message_length) {
 		showErrorCallback(client_data->window, "send() error: sent unexpected number of bytes!");
 		return;
 	}
 
 	//Now, start receiving the RTSP response message
 	//Handle Server Response Message
-	if (handleServerResponse(client_data->window, client_socket)){
+	if (handleServerResponse(client_data->window, client_socket)) {
 		//Set the client status
 		status = INIT;
 		//Set the buttons', toolbars and menus' sensitive property
@@ -234,8 +231,8 @@ void teardownRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data){
 	return;
 }
 
-void showErrorCallback(GtkWidget *widget, gpointer data){
-	GtkWidget	*dialog;		//dialog widget
+void showErrorCallback(GtkWidget *widget, gpointer data) {
+	GtkWidget	*dialog;
 
 	//Create a error dialog
 	dialog = gtk_message_dialog_new(GTK_WINDOW(widget),
@@ -253,7 +250,7 @@ void showErrorCallback(GtkWidget *widget, gpointer data){
 	return;
 }
 
-void enterButtonCallback(GtkWidget *widget, gpointer data){
+void enterButtonCallback(GtkWidget *widget, gpointer data) {
 	GdkColor	color;		//button color
 
 	//Set the color of button
