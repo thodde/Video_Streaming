@@ -140,8 +140,6 @@ u_int8	*constructRTPPacket(size_t *length);
 void	catchAlarm(int ignored);
 /*SendUtility.c*/
 void	sendOK(char *url, const char *method, u_int32 cseq, int client_socket);
-/*FileUtility.c*/
-char	*getFileType(char *url);
 /*TimeUtility.c*/
 void	setTimer(	struct itimerval	timer,
 					int					type,

@@ -13,6 +13,17 @@ static u_int16		frame_number = 0;			//sequence number
 static u_int32		frame_total = 0;			//total frame number
 static u_int32		ssrc = 0;					//rtp ssrc field
 
+char *getFileType(char *url){
+	char *extension = NULL;
+	
+	//Get the file extension type using the '.' character
+	if ((extension = strrchr(url, '.')) != NULL){
+		//Jump the '.' character
+		return (extension + 1);
+	}
+	return "";
+}
+
 /*Get Video Information Function
   Variable Definition:
   -- url: the request url except domain name and port number
