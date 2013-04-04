@@ -11,6 +11,23 @@
 #include <signal.h>
 #include "Server.h"
 
+// When a new thread is created, assign a socket to it
+// to handle communications with the new client
+void *threadMain(void *thread_arguments){
+	int client_socket;
+	
+	//Make sure the thread is killed when it completes
+	pthread_detach(pthread_self());
+	//Pass args to the socket
+	client_socket = ((THREAD_ARGUMENTS*)thread_arguments)->client_socket;
+	//Deallocate argument
+	free(thread_arguments);
+	//Handle the request
+	handleClientRequest(client_socket);
+	
+	return (NULL);
+}
+
 int main(int argc, char *argv[]){
 	if (argc != 2) {
 		perror("Usage: ./VideoServer <Port>");

@@ -112,8 +112,7 @@ int 	acceptTCPConnection(int server_socket);
 
 //AddressUtility.c
 void 	printSocketAddress(const struct sockaddr *address, FILE *stream, bool get_address_signal);
-//Thread.c
-void	*threadMain(void *thread_arguments);
+
 //HandleRequestUtility.c
 void 	handleClientRequest(int client_socket);
 void 	respondClientRequest(char *request, RTSP_HEADER *header, int client_socket);
