@@ -1,24 +1,26 @@
-/*
-	File Name:		LayoutUtility.c
-	Author:			Trevor Hodde
-*/
+/**
+ * File Name: LayoutUtility.c
+ * Author:    Trevor Hodde
+ * The majority of this class was borrowed from:
+ * docs.gstreamer.com/display/GstSDK/Basic+tutorial+5%3a+GUI+toolkit+integration 
+ */
 
 #include "Client.h"
 
-static GtkItemFactoryEntry		menu_items[] = {							//item factory entry array
+static GtkItemFactoryEntry menu_items[] = {
 	{"/_Media",					NULL,			NULL,					0,			"<Branch>"								},
 	{"/_Help",					NULL,			NULL,					0,			"<LastBranch>"							}
 };
-static gint		nmenu_items = sizeof(menu_items) / sizeof(menu_items[0]);	//number of item factory entry
-static GtkItemFactory	*item_factory;										//item factory widget
+static gint	nmenu_items = sizeof(menu_items) / sizeof(menu_items[0]);
+static GtkItemFactory	*item_factory;
 
-void initClientLayout(GtkWidget *window){
-	GtkWidget	*menubar;			//menubar widget
-	GtkWidget	*main_vbox;			//main vertical box widget	
+void initClientLayout(GtkWidget *window) {
+	GtkWidget	*menubar;
+	GtkWidget	*main_vbox;		//main vertical box widget	
 	GtkWidget	*button_hbox;		//buttons horizon box widget
-	GtkWidget	*separator;			//separator widget
+	GtkWidget	*separator;		//separator widget
 
-	//Create a vbox to put menubar, image, and 4 buttons
+	//Create a vbox to put menubar, image, and 3 buttons
 	main_vbox = gtk_vbox_new(FALSE, BOX_SPACING_SIZE);
 	//Set the border width of man_vbox
 	gtk_container_set_border_width(GTK_CONTAINER(main_vbox), BORDER_WIDTH_SIZE);
@@ -45,7 +47,7 @@ void initClientLayout(GtkWidget *window){
 	//Pack the separator into the main_vbox
 	gtk_box_pack_start(GTK_BOX(main_vbox), separator, FALSE, TRUE, 0);
 
-	//Create a hbox to put 4 buttons
+	//Create a hbox to put 3 buttons
 	button_hbox = gtk_hbox_new(TRUE, BOX_SPACING_SIZE);
 	//Pack the button_hbox into the main_vbox
 	gtk_box_pack_start(GTK_BOX(main_vbox), button_hbox, FALSE, TRUE, 0);
@@ -63,13 +65,6 @@ void initClientLayout(GtkWidget *window){
 	return;
 }
 
-
-
-/*Generate Menubar Widget Function
-  Variable Definition:
-  -- window: gtk+ window widget pointer
-  Return Value: menubar widget
-*/
 GtkWidget *getMenubarMenu(GtkWidget *window){
 	GtkAccelGroup	*accel_group;		//accelerator group widget
 
@@ -134,9 +129,9 @@ GtkWidget *getToolbar(){
 
 
 GtkWidget *getButton(	GtkWidget *box,
-						const gchar *icon_name,
-						const gchar *label_string,
-						const gchar *tooltip_label){
+			const gchar *icon_name,
+			const gchar *label_string,
+			const gchar *tooltip_label){
 	GtkWidget	*icon_label_box;	//image & label box widget
 	GtkWidget	*button;			//button widget
 	GtkWidget	*icon;				//image widget
@@ -175,16 +170,9 @@ GtkWidget *getButton(	GtkWidget *box,
 	return button;
 }
 
-/*Set the Buttons' Sensitive Property Function
-  Variable Definition:
-  -- setup_s: setup button sensitive
-  -- play_s: play button sensitive
-  -- teardown_s: teardown button sensitive
-  Return Value: NULL
-*/
 void setSensitive(	gboolean setup_s,
-					gboolean play_s,
-					gboolean teardown_s){
+			gboolean play_s,
+			gboolean teardown_s){
 	GtkToolItem		*tool_item;		//tool item widget
 
 	//Set the sensitive property of buttons
@@ -202,11 +190,6 @@ void setSensitive(	gboolean setup_s,
 	return;
 }
 
-/*Set the Image Function
-  Variable Definition:
-  -- rtp: image buffer
-  Return Value: NULL
-*/
 void setImage(const u_int8 *rtp){
 	FILE	*screen_channel;		//screenshot file stream
 
@@ -226,19 +209,15 @@ void setImage(const u_int8 *rtp){
 	return;
 }
 
-/*Generate Icon Function
-  Variable Definition:
-  -- icon_name: icon file name
-  Return Value: GdkPixBuf widget
-*/
-GdkPixbuf *getIcon(const gchar *icon_name){
+GdkPixbuf *getIcon(const gchar *icon_name) {
 	GdkPixbuf	*pixbuf;				//gdkpixbuf widget
 	GError		*error = NULL;			//error variable
 
 	//Create the GdkPixbuf
 	pixbuf = gdk_pixbuf_new_from_file(icon_name, &error);
 	//Test the pixbuf
-	if (!pixbuf){
+
+	if (!pixbuf) {
 		//Output the error message
 		fputs("gdk_pixbuf_new_from_file() failed: ", stderr);
 		fputs(error->message, stderr);

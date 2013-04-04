@@ -1,16 +1,18 @@
-/*
-	File Name:		MainFunction.c
-	Author:			Trevor Hodde
-*/
+/**
+ * File Name: MainFunction.c
+ * Author:    Trevor Hodde
+ * The code to setup the GTK window was borrowed from:
+ * docs.gstreamer.com/display
+ */
 
 #include "Client.h"
 
-int main(int argc, char *argv[]){
-	if (argc != 4){
-		perror("Usage: <Server IP address/Hostname> <Server port> <video file name>");
+int main(int argc, char *argv[]) {
+	if (argc != 4){ 
+		perror("Usage: <Server IP address/hostname> <Server port> <video file>");
 	}
 
-	CLIENT_DATA		*cdata;			//_client_data structure node
+	CLIENT_DATA	*cdata;
 
 	//Initialize GTK application
 	gtk_init(&argc, &argv);
@@ -18,9 +20,9 @@ int main(int argc, char *argv[]){
 	//Allocate memory for _client_data structure
 	cdata = g_malloc(sizeof(CLIENT_DATA));
 	//Initialize _client_data structure
-	cdata->host = argv[1];			//server ip address/name
-	cdata->service = argv[2];		//server port/service
-	cdata->video = argv[3];			//request video name
+	cdata->host = argv[1];			//server ip address
+	cdata->service = argv[2];		//server port
+	cdata->video = argv[3];			//video name
 
 	//Create the main window
 	cdata->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -40,9 +42,7 @@ int main(int argc, char *argv[]){
 	//Initalize video client global variables
 	initClient(CLIENT_RTP_PORT);
 
-	//Show everything in window
 	gtk_widget_show_all(cdata->window);
-	//Hide toolbar
 	gtk_widget_hide(toolbar);
 
 	//GTK application main function
