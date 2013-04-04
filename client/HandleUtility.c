@@ -1,23 +1,10 @@
-////////////////////////////////////////////////////////
-/*
-	File Name:		HandleUtility.c
-	Author:			Trevor Hodde
-	Note:			This HandleUtility.c file includes 
-					Handle Client Request Message and
-					Server Response Message Functions.
-*/
-////////////////////////////////////////////////////////
+/**
+ * File Name: HandleUtility.c
+ * Author:    Trevor Hodde
+ */
 
-///////////////HEADER FILES///////////////
 #include "Client.h"
 
-///////////////FUNCTIONS///////////////
-/*Handle Server Response Function
-  Variable Definition:
-  -- widget: window widget
-  -- client_socket: socket connected to the server
-  Return value: if handle server response successful return true, else return false
-*/
 bool handleServerResponse(GtkWidget *widget, int client_socket){
 	RTSP_HEADER		*header;						//_rtsp_header structure header pointer
 	FILE 			*channel;						//file stream for client socket
@@ -54,30 +41,8 @@ bool handleServerResponse(GtkWidget *widget, int client_socket){
 	//Get server Header Lines
 	header = getHeaderLines(channel);
 
-#ifdef	DEBUG
-	RTSP_HEADER		*debug_header_node;
-
-	DEBUG_START;
-	fputs("RTSP response header lines:\n", stdout);
-	//Output the RTSP response header lines
-	for (debug_header_node = header->next; debug_header_node != NULL; debug_header_node = debug_header_node->next){
-		fputs(debug_header_node->field_name, stdout);
-		fputs(": ", stdout);
-		fputs(debug_header_node->field_value, stdout);
-		fputc('\n', stdout);
-	}
-	DEBUG_END;
-#endif
-
 	//Get server response content
 	content = getResponseContents(channel);
-
-#ifdef	DEBUG
-	DEBUG_START;
-	fputs("RTSP response content:\n", stdout);
-	fputs(content, stdout);
-	DEBUG_END;
-#endif
 
 	//Get the rtsp version, status code, and status message
 	sscanf(response_line, "%s%s%s", version, status_code, status_message);
@@ -153,11 +118,6 @@ RTSP_HEADER *getHeaderLines(FILE *stream){
 	return header;
 }
 
-/*Get Response Contents Function
-  Variable Definition:
-  -- stream: file stream for client socket
-  Return Value: response content
-*/
 char *getResponseContents(FILE *stream){
 	char	*content = (char*)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	char	buffer[BUFFER_SIZE];

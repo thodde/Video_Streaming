@@ -56,12 +56,6 @@ void menuCallback(gpointer callback_data, guint callback_action, GtkWidget *menu
 	return;
 }
 
-/*SETUP method Callback Function
-  Variable Definition:
-  -- widget: callback function widget
-  -- client_data: callback function widget
-  Return Value: NULL
-*/
 void setupRTSPCallback(GtkWidget *widget, CLIENT_DATA *client_data){
 	gchar		*buffer;					//request message buffer
 	gint		client_socket = -1;			//socket descriptor for client
