@@ -3,6 +3,7 @@
  * Author:    Trevor Hodde
  * GTK Code borrowed from the GTK website tutorials and
  * gstreamer tutorials.
+ * RTP Code borrowed from cs.columbia.edu/irt/software/rtplib
  */
 
 #ifndef	CLIENT_H_
