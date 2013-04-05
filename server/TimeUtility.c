@@ -1,18 +1,19 @@
 /**
- *	File Name:	TimeUtility.c
- *	Author:		Trevor Hodde
+ * File Name: TimeUtility.c
+ * Author:    Trevor Hodde
  */
 
 #include <sys/stat.h>
 #include <time.h>
 #include "Server.h"
 
-void setTimer(	struct itimerval	timer,
-				int					type,
-				u_int32				interval_sec,
-				u_int32				interval_usec,
-				u_int32				value_sec,
-				u_int32				value_usec){
+void setTimer(struct itimerval	timer,
+	int type,
+	u_int32	interval_sec,
+	u_int32	interval_usec,
+	u_int32	value_sec,
+	u_int32	value_usec) {
+
 	//Set the time out value
 	timer.it_interval.tv_sec = interval_sec;
 	timer.it_interval.tv_usec = interval_usec;
@@ -21,45 +22,49 @@ void setTimer(	struct itimerval	timer,
 	timer.it_value.tv_usec = value_usec;
 
 	//Set the timer
-	if (setitimer(type, &timer, NULL) != 0){
+	if (setitimer(type, &timer, NULL) != 0) {
 		perror("setitimer() failed");
 	}
 
 	return;
 }
 
-struct tm *getTimeInGMTFormat(char *url, int signal_value){
-	struct stat		file_information;	//file information sstructure
-	time_t			t;					//time structure
+struct tm *getTimeInGMTFormat(char *url, int signal_value) {
+	struct stat file_information;
+	time_t t;		
 	
 	//signal_value equals to 0, get the system current time
-	if (!signal_value){
+	if (!signal_value) {
 		time(&t);
 	}
-	//signal_value not equals to 0, get the file time(Create time, Modify time, Access time...)
-	else if (stat(url, &file_information) != -1){
+	else if (stat(url, &file_information) != -1) {
 		switch(signal_value){
 			//signal_value is 1, get the file create time
-			case 1:	t = file_information.st_atime;	break;
+			case 1:	
+				t = file_information.st_atime;	
+				break;
 			//signal_value is 2, get the file modify time
-			case 2:	t = file_information.st_mtime;	break;
+			case 2:	
+				t = file_information.st_mtime;	
+				break;
 			//signal_value is others
-			default:								break;
+			default:
+				break;
 		}
 	}
 	//Cannot find the file information
-	else{
+	else {
 		perror("stat() failed(cannot find the file information)");
 	}
 	
 	return gmtime(&t);
 }
 
-char *convertTimeFormat(struct tm *gmt_time, int signal_value){
-	char	*gmt_time_string = (char*)malloc(sizeof(char) * (TIME_SIZE + 1));	//time in GMT format string
+char *convertTimeFormat(struct tm *gmt_time, int signal_value) {
+	char	*gmt_time_string = (char*)malloc(sizeof(char) * (TIME_SIZE + 1));
 
 	//According to the signal_value, convert time to different format 
-	switch(signal_value){
+	switch(signal_value) {
 		case 1:
 			strftime(gmt_time_string, TIME_SIZE, "%a, %d %b %Y %H:%M:%S GMT", gmt_time);
 			break;
@@ -77,12 +82,12 @@ char *convertTimeFormat(struct tm *gmt_time, int signal_value){
 	return gmt_time_string;
 }
 
-bool compareModifiedTime(char *url, char *modified_time_string){
-	struct tm	*file_modified_time = getTimeInGMTFormat(url, 2);	//tm struct with the file last modified time
-	int			i;
+bool compareModifiedTime(char *url, char *modified_time_string) {
+	struct tm	*file_modified_time = getTimeInGMTFormat(url, 2);
+	int i;
 
-	for (i = 1; i < NUMBER_SIZE; i++){
-		if (strcmp(modified_time_string, convertTimeFormat(file_modified_time, i)) == 0){
+	for (i = 1; i < NUMBER_SIZE; i++) {
+		if (strcmp(modified_time_string, convertTimeFormat(file_modified_time, i)) == 0) {
 			return true;
 		}
 	}

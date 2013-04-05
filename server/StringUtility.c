@@ -1,7 +1,10 @@
-/*
-	File Name:		StringUtility.c
-	Author:			Trevor Hodde
-*/
+/**
+ * File Name: StringUtility.c
+ * Author:    Trevor Hodde
+ * I borrowed this entire file from:
+ * yolinux.com/TUTORIALS and
+ * Mastering Regular Expressions By Jeffery Friedl 
+ */
 
 #include <sys/stat.h>
 #include <ctype.h>
@@ -9,40 +12,36 @@
 #include "Server.h"
 
 char *itoa(int number){
-	int		i = number;													//number
-	int		j;															//counter
-	int		power;														//power
-	char	*string = (char*)malloc(sizeof(char) * (NUMBER_SIZE + 1));	//convert string
+	int i = number;	
+	int	j;
+	int	power;
+	char	*string = (char*)malloc(sizeof(char) * (NUMBER_SIZE + 1));
 	
 	//Find the max power
-	for (power = 1, j = 1; i >= 10; i /= 10, j++){
+	for (power = 1, j = 1; i >= 10; i /= 10, j++) {
 		power *= 10;
 	}
+
 	//Get the string which is converted by number
-	for (; power > 0; power /= 10){
+	for (; power > 0; power /= 10) {
 		*string++ = '0' + number / power;
 		number %= power;
 	}
+
 	//Set the end of the string
 	*string = '\0';
 
 	return string - j;
 }
 
-/*Decode %HEX Format URL Function
-  Variable Definition:
-  -- url: the request url except domain name and port number
-  Return Value: NULL
-*/
 void decodeURL(char *url){
-	char	*source = NULL;		//source string
-	int		number;				//number(char) represent original %HEX
+	char	*source = NULL;	
+	int	number;	
 
 	//Initilize the source by given url
 	source = url;
-	//Test the %HEX in url variable
-	while (*source){
-		if (*source == '%'){
+	while (*source) {
+		if (*source == '%') {
 			source++;
 			//Convert HEX to number(char)
 			sscanf(source, "%2x", &number);
@@ -50,7 +49,7 @@ void decodeURL(char *url){
 			//Jump the %HEX number
 			source += 2;
 		}
-		else{
+		else {
 			*url++ = *source++;
 		}
 	}
@@ -58,77 +57,63 @@ void decodeURL(char *url){
 	*url = '\0';
 }
 
-/*Get paths below the current directory Function
-  Variable Definition:
-  -- url: the request url except domain name and port number
-  Return Value: NULL
-*/
-void pathBelowCurrentDirectory(char *url){
-	char	*source = NULL;			//source string
-	char	*destination = NULL;	//destination string
+void pathBelowCurrentDirectory(char *url) {
+	char	*source = NULL;	
+	char	*destination = NULL;
 	
 	//Initilize the source and destination by given url
 	source = destination = url;
 	//Test whether the url contains "rtsp://*"
-	if (strncmp(source, "rtsp://", 7) == 0){
+	if (strncmp(source, "rtsp://", 7) == 0) {
 		//If contain "rtsp://", remove it
 		source += 7;
 		//Jump the server ip address/name & port number/service
-		while (*source){
-			if (strncmp(source, "/", 1) == 0){
+		while (*source) {
+			if (strncmp(source, "/", 1) == 0) {
 				break;
 			}
 			source++;
 		}
 	}
 	//Test whether the url contains "/../" and "//"
-	while (*source){
+	while (*source) {
 		//If contain "/../", remove it
-		if (strncmp(source, "/../", 4) == 0){
+		if (strncmp(source, "/../", 4) == 0) {
 			source += 3;
 		}
 		//if contain "//", remove it
-		else if (strncmp(source, "//", 2) == 0){
+		else if (strncmp(source, "//", 2) == 0) {
 			source++;
 		}
-		else{
+		else {
 			*destination++ = *source++;
 		}
 	}
 	//Set the end of the destination string
 	*destination = '\0';
+
 	//Remove the first '/' in url
-	if (*url == '/'){
+	if (*url == '/') {
 		strcpy(url, url + 1);
 	}
+
 	//If the url is the root directory, set url as '.'
-	if (url[0] == '\0' || strcmp(url, "./") == 0 || strcmp(url, "./..") == 0){
+	if (url[0] == '\0' || strcmp(url, "./") == 0 || strcmp(url, "./..") == 0) {
 		strcpy(url, ".");
 	}
 }
 
-/*Check RTSP Method Function
-  Variable Definition:
-  -- method: the request method
-  Return Value: if method is not allowed, return 1; else return 0
-*/
-bool methodNotAllow(char *method){
+bool methodNotAllow(char *method) {
 	return ((strcmp(method, "SETUP") != 0) && (strcmp(method, "PLAY") != 0)
 			&& (strcmp(method, "TEARDOWN") != 0));
 }
 
-/*Check Header Lines Function
-  Variable Definition:
-  -- header: client header lines
-  -- field_value: syntax incorrect header line string
-  Return Value: if all header lines are syntactically incorrect, return 1; else return 0
-*/
 bool headerLinesIncorrect(RTSP_HEADER *header, char *field_value){
-	RTSP_HEADER		*node;		//_rtsp_header structure node
+	RTSP_HEADER	*node;
 
-	for (node = header->next; node != NULL; node = node->next){
+	for (node = header->next; node != NULL; node = node->next) {
 		//Use regular expression to check header lines' syntax
-		if (!syntaxChecking(node->header_line, HEADER_LINE)){
+		if (!syntaxChecking(node->header_line, HEADER_LINE)) {
 			sprintf(field_value, "Header line: [%s] is syntacically incorrect!", node->header_line);
 			return true;
 		}
@@ -137,160 +122,110 @@ bool headerLinesIncorrect(RTSP_HEADER *header, char *field_value){
 	return false;
 }
 
-/*Test URL is not exist Function
-  Variable Definition:
-  -- url: the request url except domain name and port number
-  Return Value: if the url is not exist, return 0; else, return 1
-*/
 bool urlNotExist(char *url){
-	struct stat		file_information;	//file information structure
+	struct stat	file_information;
 	
 	return (stat(url, &file_information) == -1);
 }
 
-/*Test Header Field is not exist Function
-  Variable Definition:
-  -- header: _rtsp_header structure head pointer
-  -- field_name: field name
-  -- field_value: field value
-  Return Value: if field exist, return 0; else return 1
-*/
-bool fieldNotExist(RTSP_HEADER *header, const char *field_name, char *field_value){
-	RTSP_HEADER		*node;		//_rtsp_header structure node
+bool fieldNotExist(RTSP_HEADER *header, const char *field_name, char *field_value) {
+	RTSP_HEADER	*node;
 	
 	//Initialize node pointer
 	node = header;
 	//Find the field name
-	while (node != NULL){
-		if (strcmp(node->field_name, field_name) != 0){
+	while (node != NULL) {
+		if (strcmp(node->field_name, field_name) != 0) {
 			node = node->next;
 		}
-		else{
+		else {
 			break;
 		}
 	}
 	//Get the field value
-	if (node != NULL){
+	if (node != NULL) {
 		strcpy(field_value, node->field_value);
 	}
 	
 	return (node == NULL);
 }
 
-/*Test URL is a directory Function
-  Variable Definition:
-  -- url: the request url except domain name and port number
-  Return Value: if the url is a directory, return 1; else return 0
-*/
-bool urlIsADirectory(char *url){
-	struct stat		file_information;	//file information structure
+bool urlIsADirectory(char *url) {
+	struct stat file_information;
 	
 	return (stat(url, &file_information) != -1 && S_ISDIR(file_information.st_mode));
 }
 
-/*Test Method is SETUP Function
-  Variable Definition:
-  -- method: the request method
-  Return Value: if the method is SETUP, return 1; else return 0
-*/
-bool methodIsSetup(const char *method){
+bool methodIsSetup(const char *method) {
 	return strcmp(method, "SETUP") == 0;
 }
 
-/*Test Method is PLAY Function
-  Variable Definition:
-  -- method: the request method
-  Return Value: if the method is PLAY, return 1; else return 0
-*/
-bool methodIsPlay(const char *method){
+bool methodIsPlay(const char *method) {
 	return strcmp(method, "PLAY") == 0;
 }
 
-/*Test Method is TEARDOWN Function
-  Variable Definition:
-  -- method: the request method
-  Return Value: if the method is TEARDOWN, return 1; else return 0
-*/
-bool methodIsTeardown(const char *method){
+bool methodIsTeardown(const char *method) {
 	return strcmp(method, "TEARDOWN") == 0;
 }
 
-/*Test Method is Not Valid in State Function
-  Variable Definition:
-  -- method: the request method
-  Return Value: if the method is not valid in special state, return 1, else return 0
-*/
-bool methodIsNotValidInState(const char *method){
+bool methodIsNotValidInState(const char *method) {
 	//Test the status is INIT
-	if (status == INIT){
+	if (status == INIT) {
 		//PLAY method is not valid
 		return (methodIsPlay(method));
 	}
 	//Test the status is READY or PLAYING
-	else{
+	else {
 		//SETUP method is not valid
 		return methodIsSetup(method);
 	}
 }
 
-/*Split the Name and Value of Header Line Function
-  Variable Definition:
-  -- header_line: client request header lines
-  -- stop: split character
-  Return Value: name of the header_line (before the stop of the header_line)
-*/
-char *splitNameAndValue(char *header_line, const char stop){
-	int		i = 0;															//counter for name
-	int 	j = 0;															//counter for value
-	char	*name = (char*)malloc(sizeof(char)*(strlen(header_line) + 1));	//name string
+char *splitNameAndValue(char *header_line, const char stop) {
+	int	i = 0;	
+	int 	j = 0;	
+	char	*name = (char*)malloc(sizeof(char)*(strlen(header_line) + 1));	
 	
 	//Jump the ' ' or Tab character(blank character)
-	for (i = 0; isspace(header_line[i]); i++){
-		;	
-	}
+	for (i = 0; isspace(header_line[i]); i++) { ; }	
+	
 	//Set the name in the header line
-	for (j = 0; header_line[i] && (header_line[i] != stop); i++, j++){
+	for (j = 0; header_line[i] && (header_line[i] != stop); i++, j++) {
 		//Lowercase the field name
 		name[j] = tolower(header_line[i]);
 	}
+
 	//Set the end of the name string
 	name[j] = '\0';
 	
 	//Test whether has more characters after name
-	if (header_line[i]){
+	if (header_line[i]) {
 		//Jump the "stop" character
 		++i;
 		//Jump the ' ' or Tab character(blank chacater)
-		for (; isspace(header_line[i]); i++){
-			;
-		}
+		for (; isspace(header_line[i]); i++){ ; }
 	}
 	//Set the value in the header line and remove the '\r' and '\n' character
 	for (j = 0; header_line[i] && (header_line[i] != '\r') && (header_line[i] != '\n'); i++, j++){
 		header_line[j] = header_line[i];
 	}
+
 	//Set the end of the value string
 	header_line[j] = '\0';
 	
 	return name;
 }
 
-/*Use Regular Expressions to check Request Message Function
-  Variable Definition:
-  -- string: string need to be checked
-  -- signal_value: signal that decide the checking type
-  Return Value: if matched, return 1; else return 0
-*/
 bool syntaxChecking(char *string, int signal_value){
-	char 		*pattern = (char*)malloc(sizeof(char) * (BUFFER_SIZE * 2));		//regular expression string
-	char		*error_buffer = (char*)malloc(sizeof(char) * (STRING_SIZE));	//error buffer
-	int 		status;															//result status
-	size_t 		nmatch = ONE_SIZE;												//max number of match result
-	regex_t 	reg;															//regex_t structure
-	regmatch_t	pmatch[ONE_SIZE];												//match result
+	char 	*pattern = (char*)malloc(sizeof(char) * (BUFFER_SIZE * 2));
+	char	*error_buffer = (char*)malloc(sizeof(char) * (STRING_SIZE));	
+	int 		status;	
+	size_t 		nmatch = ONE_SIZE;
+	regex_t 	reg;		
+	regmatch_t	pmatch[ONE_SIZE];	
 	
 	//According to the signal value, determine using which regular expression
-	switch (signal_value){
+	switch (signal_value) {
 		//Blank line
 		case BLANK_LINE:
 			pattern = "^[\t| ]*\r\n$";
@@ -352,16 +287,18 @@ bool syntaxChecking(char *string, int signal_value){
 	}
 	//Compile the regular expression
 	status = regcomp(&reg, pattern, REG_EXTENDED);
-	if (status != 0){
+	if (status != 0) {
 		regerror(status, &reg, error_buffer, STRING_SIZE);
 		perror("regcomp() failed!");
 	}
+
 	//Match the regular expression
 	status = regexec(&reg, string, nmatch, pmatch, 0);
 	//If there is no match result, return 0
-	if (status == REG_NOMATCH){
+	if (status == REG_NOMATCH) {
 		return false;
 	}
+
 	//Close the regex_t structure
 	regfree(&reg);
 	
